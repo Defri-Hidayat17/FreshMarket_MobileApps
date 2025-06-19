@@ -47,6 +47,16 @@ public class loginpage extends AppCompatActivity {
             }
         });
 
+        textView6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(loginpage.this, resetpassword.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
         // === TOGGLE PASSWORD VISIBILITY ===
         EditText passwordEditText = findViewById(R.id.inputPassword);
         final boolean[] isPasswordVisible = {false};
