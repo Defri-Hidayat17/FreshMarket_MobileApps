@@ -1,12 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.FreshMarket" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Status Bar -->
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
 
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Matikan warna ungu bawaan -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+
+        <!-- Matikan ripple di seluruh app -->
+        <item name="colorControlHighlight">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.FreshMarket" parent="Base.Theme.FreshMarket" />
+    <style name="Theme.FreshMarket" parent="Base.Theme.FreshMarket"/>
 </resources>

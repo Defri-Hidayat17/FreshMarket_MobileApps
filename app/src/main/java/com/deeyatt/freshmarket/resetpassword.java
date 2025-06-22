@@ -1,20 +1,24 @@
 package com.deeyatt.freshmarket;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.Intent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.widget.ImageView;
-
 
 public class resetpassword extends AppCompatActivity {
+
+    EditText inputEmail;
+    ImageView imageView19;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +30,20 @@ public class resetpassword extends AppCompatActivity {
             return insets;
         });
 
-        ImageView imageView19 = findViewById(R.id.imageView19);
+        // Inisialisasi EditText dan ImageView
+        inputEmail = findViewById(R.id.inputEmail);
+        imageView19 = findViewById(R.id.imageView19);
 
         imageView19.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // VALIDASI: Cek apakah inputEmail kosong
+                String email = inputEmail.getText().toString().trim();
+                if (email.isEmpty()) {
+                    Toast.makeText(resetpassword.this, "Anda belum mengisi Email", Toast.LENGTH_SHORT).show();
+                    return; // stop animasi & intent kalau kosong
+                }
 
                 // Scale up
                 ScaleAnimation scaleUp = new ScaleAnimation(
@@ -80,7 +93,6 @@ public class resetpassword extends AppCompatActivity {
                 imageView19.startAnimation(scaleUp);
             }
         });
-
 
     }
 }

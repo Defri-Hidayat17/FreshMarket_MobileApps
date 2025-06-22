@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,7 +34,8 @@ public class resetpassword2 extends AppCompatActivity {
         inputPasswordBaru.setOnTouchListener((v, event) -> {
             if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
                 int drawableEnd = 2; // index drawableRight
-                if (event.getRawX() >= (inputPasswordBaru.getRight() - inputPasswordBaru.getCompoundDrawables()[drawableEnd].getBounds().width())) {
+                if (event.getRawX() >= (inputPasswordBaru.getRight()
+                        - inputPasswordBaru.getCompoundDrawables()[drawableEnd].getBounds().width())) {
                     isPasswordVisible1 = !isPasswordVisible1;
                     if (isPasswordVisible1) {
                         inputPasswordBaru.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -42,7 +44,7 @@ public class resetpassword2 extends AppCompatActivity {
                         inputPasswordBaru.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         inputPasswordBaru.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.eye_off, 0);
                     }
-                    inputPasswordBaru.setSelection(inputPasswordBaru.length()); // cursor di akhir
+                    inputPasswordBaru.setSelection(inputPasswordBaru.length());
                     return true;
                 }
             }
@@ -54,7 +56,8 @@ public class resetpassword2 extends AppCompatActivity {
         konfirmasiPasswordBaru.setOnTouchListener((v, event) -> {
             if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
                 int drawableEnd = 2; // index drawableRight
-                if (event.getRawX() >= (konfirmasiPasswordBaru.getRight() - konfirmasiPasswordBaru.getCompoundDrawables()[drawableEnd].getBounds().width())) {
+                if (event.getRawX() >= (konfirmasiPasswordBaru.getRight()
+                        - konfirmasiPasswordBaru.getCompoundDrawables()[drawableEnd].getBounds().width())) {
                     isPasswordVisible2 = !isPasswordVisible2;
                     if (isPasswordVisible2) {
                         konfirmasiPasswordBaru.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
@@ -71,8 +74,21 @@ public class resetpassword2 extends AppCompatActivity {
         });
 
         // =============================
-        // ImageView19 ➜ scale animation + intent ke resetpassword_berhasil
+        // ImageView19 ➜ validasi input, scale animasi, intent
         imageView19.setOnClickListener(v -> {
+            // Ambil isi input
+            String passwordBaru = inputPasswordBaru.getText().toString().trim();
+            String konfirmasiBaru = konfirmasiPasswordBaru.getText().toString().trim();
+
+            // Validasi kosong
+            if (passwordBaru.isEmpty() || konfirmasiBaru.isEmpty()) {
+                Toast.makeText(resetpassword2.this,
+                        "Anda belum mengisi password terbaru",
+                        Toast.LENGTH_SHORT).show();
+                return; // stop animasi + intent
+            }
+
+            // Jika sudah terisi, jalankan animasi + intent
             ScaleAnimation scaleUp = new ScaleAnimation(
                     1.0f, 1.1f,
                     1.0f, 1.1f,
@@ -106,7 +122,6 @@ public class resetpassword2 extends AppCompatActivity {
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    // Navigasi ke halaman resetpassword_berhasil
                     Intent intent = new Intent(resetpassword2.this, resetpassword_berhasil.class);
                     startActivity(intent);
                     finish();
