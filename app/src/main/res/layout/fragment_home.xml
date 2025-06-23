@@ -132,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.47">
+        app:layout_constraintVertical_bias="0.48">
 
         <LinearLayout
             android:id="@+id/linearLayoutGrubs"
@@ -179,6 +179,167 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lexenddecasemibold"
+        android:text="Pilihan teratas di aplikasi"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.121"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.62" />
+
+    <ImageView
+        android:id="@+id/imageView29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.732"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6225"
+        app:srcCompat="@drawable/button_lht_semua" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintVertical_bias="0.82"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- Produk 1: Ayam -->
+            <FrameLayout
+                android:layout_width="177dp"
+                android:layout_height="127dp"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/imageViewAyam"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/top_list_ayam" />
+
+                <ImageView
+                    android:id="@+id/addKeranjangAyam"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/add_keranjang" />
+
+            </FrameLayout>
+
+            <!-- Produk 2: Daging Sapi -->
+            <FrameLayout
+                android:layout_width="177dp"
+                android:layout_height="127dp"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/imageViewDagingSapi"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/top_list_dagingsapi" />
+
+                <ImageView
+                    android:id="@+id/addKeranjangDagingSapi"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/add_keranjang" />
+
+            </FrameLayout>
+
+            <!-- Produk 3: Sembako -->
+            <FrameLayout
+                android:layout_width="177dp"
+                android:layout_height="127dp"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/imageViewSembako"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/top_list_sembako" />
+
+                <ImageView
+                    android:id="@+id/addKeranjangSembako"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/add_keranjang" />
+
+            </FrameLayout>
+
+            <!-- Produk 4: Nugget -->
+            <FrameLayout
+                android:layout_width="177dp"
+                android:layout_height="127dp"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/imageViewNugget"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/top_list_nugget" />
+
+                <ImageView
+                    android:id="@+id/addKeranjangNugget"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/add_keranjang" />
+
+            </FrameLayout>
+
+            <!-- Produk 5: Bayam -->
+            <FrameLayout
+                android:layout_width="177dp"
+                android:layout_height="127dp">
+
+                <ImageView
+                    android:id="@+id/imageViewBayam"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/top_list_bayam" />
+
+                <ImageView
+                    android:id="@+id/addKeranjangBayam"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    app:srcCompat="@drawable/add_keranjang" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
