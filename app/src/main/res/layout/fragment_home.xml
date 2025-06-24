@@ -45,7 +45,7 @@
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.184"
+        app:layout_constraintHorizontal_bias="0.1952"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.048" />
@@ -224,7 +224,7 @@
             android:paddingEnd="16dp">
 
             <!-- Produk 1: Ayam -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="177dp"
                 android:layout_height="127dp"
                 android:layout_marginEnd="16dp">
@@ -240,14 +240,16 @@
                     android:id="@+id/addKeranjangAyam"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:srcCompat="@drawable/add_keranjang" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
             <!-- Produk 2: Daging Sapi -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="177dp"
                 android:layout_height="127dp"
                 android:layout_marginEnd="16dp">
@@ -263,14 +265,16 @@
                     android:id="@+id/addKeranjangDagingSapi"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:srcCompat="@drawable/add_keranjang" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
             <!-- Produk 3: Sembako -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="177dp"
                 android:layout_height="127dp"
                 android:layout_marginEnd="16dp">
@@ -286,14 +290,16 @@
                     android:id="@+id/addKeranjangSembako"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:srcCompat="@drawable/add_keranjang" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
             <!-- Produk 4: Nugget -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="177dp"
                 android:layout_height="127dp"
                 android:layout_marginEnd="16dp">
@@ -309,14 +315,16 @@
                     android:id="@+id/addKeranjangNugget"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:srcCompat="@drawable/add_keranjang" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
             <!-- Produk 5: Bayam -->
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="177dp"
                 android:layout_height="127dp">
 
@@ -331,14 +339,17 @@
                     android:id="@+id/addKeranjangBayam"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
                     app:srcCompat="@drawable/add_keranjang" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
         </LinearLayout>
     </HorizontalScrollView>
+
 
 
 

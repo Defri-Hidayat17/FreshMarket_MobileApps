@@ -2,33 +2,264 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cart_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/onboarding">
 
-    <TextView
-        android:id="@+id/textViewCartTitle"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardItem"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Keranjang Belanja Kamu 🛒"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp"
+        android:background="@android:color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Tambah contoh item di cart -->
-    <TextView
-        android:id="@+id/textViewCartItem"
-        android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <!-- Gambar Produk -->
+            <ImageView
+                android:id="@+id/imageProduct"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pesanan_beras" />
+
+            <!-- Nama Produk -->
+            <TextView
+                android:id="@+id/textProductName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@id/imageProduct"
+                android:text="Beras Fortune"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:fontFamily="@font/lexenddecabold" />
+
+            <!-- Harga Produk -->
+            <TextView
+                android:id="@+id/textProductPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/textProductName"
+                android:layout_alignParentEnd="true"
+                android:text="Rp 225.000 / 15kg"
+                android:textColor="#1C8D70"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecasemibold"/>
+
+            <!-- Deskripsi Produk -->
+            <TextView
+                android:id="@+id/textProductDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textProductName"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/imageProduct"
+                android:text="Beras Berkualitas\nDan Pulen"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#666666"
+                android:textSize="13sp" />
+
+            <!-- Tombol Delete -->
+
+            <!-- Tombol Kurang, Jumlah, Tambah -->
+
+            <ImageView
+                android:id="@+id/buttonDelete"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:tint="#FF0000"
+                android:layout_below="@id/textProductPrice"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="52.5dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Hapus"
+                app:srcCompat="@drawable/baseline_delete_24" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textProductDesc"
+                android:layout_toEndOf="@id/imageProduct"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/buttonDecrease"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/baseline_remove_circle_24"
+                    app:tint="#1C8D70"
+                    android:contentDescription="Kurangi" />
+
+                <TextView
+                    android:id="@+id/textQuantity"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginHorizontal="8dp"/>
+
+                <ImageView
+                    android:id="@+id/buttonIncrease"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/baseline_add_circle_24"
+                    app:tint="#1C8D70"
+                    android:contentDescription="Tambah" />
+
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardItem2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Item: Apel - Qty: 3"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/textViewCartTitle"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp"
+        android:background="@android:color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <!-- Gambar Produk -->
+            <ImageView
+                android:id="@+id/imageProduct2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pesanan_indomie" />
+
+            <!-- Nama Produk -->
+            <TextView
+                android:id="@+id/textProductName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_toEndOf="@id/imageProduct2"
+                android:text="Mie Indomie"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:fontFamily="@font/lexenddecabold" />
+
+            <!-- Harga Produk -->
+            <TextView
+                android:id="@+id/textProductPrice2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/textProductName2"
+                android:layout_alignParentEnd="true"
+                android:text="Rp 25.000 / Dus"
+                android:textColor="#1C8D70"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecasemibold"/>
+
+            <!-- Deskripsi Produk -->
+            <TextView
+                android:id="@+id/textProductDesc2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textProductName2"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/imageProduct2"
+                android:text="Mi Instan Rasa Lezat\nPraktis dan Nikmat"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#666666"
+                android:textSize="13sp" />
+
+            <!-- Tombol Delete -->
+
+            <!-- Tombol Kurang, Jumlah, Tambah -->
+
+            <ImageView
+                android:id="@+id/buttonDelete2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:tint="#FF0000"
+                android:layout_below="@id/textProductPrice2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="52.5dp"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="Hapus"
+                app:srcCompat="@drawable/baseline_delete_24" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textProductDesc2"
+                android:layout_toEndOf="@id/imageProduct2"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/buttonDecrease2"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/baseline_remove_circle_24"
+                    app:tint="#1C8D70"
+                    android:contentDescription="Kurangi" />
+
+                <TextView
+                    android:id="@+id/textQuantity2"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginHorizontal="8dp"/>
+
+                <ImageView
+                    android:id="@+id/buttonIncrease2"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/baseline_add_circle_24"
+                    app:tint="#1C8D70"
+                    android:contentDescription="Tambah" />
+
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
