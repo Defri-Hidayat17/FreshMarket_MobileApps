@@ -71,6 +71,40 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+        View itemVoucher = view.findViewById(R.id.itemVoucher);
+        if (itemVoucher != null) {
+            itemVoucher.setOnClickListener(v -> {
+                // Scale animation
+                v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                        .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(100).start())
+                        .start();
+
+                // Delay lalu navigasi ke VoucherPage
+                itemVoucher.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), VoucherPage.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 300); // 300ms delay
+            });
+        }
+
+        View itemPesanan = view.findViewById(R.id.itemPesanan);
+        if (itemPesanan != null) {
+            itemPesanan.setOnClickListener(v -> {
+                // Animasi scale
+                playScaleAnimation(v);
+
+                // Delay sebelum navigasi
+                v.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), PesananPage.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 150);
+            });
+        }
+
+
+
 
 
         setupMenuItems(view);

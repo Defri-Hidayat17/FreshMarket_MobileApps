@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Umum"
-                android:textStyle="bold"
+                android:fontFamily="@font/lexenddecabold"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_marginTop="8dp" />
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pengaturan"
-                android:textStyle="bold"
+                android:fontFamily="@font/lexenddecabold"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_marginTop="16dp" />
@@ -120,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lainnya"
-                android:textStyle="bold"
+                android:fontFamily="@font/lexenddecabold"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_marginTop="16dp" />
@@ -142,9 +142,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Logout"
+                android:fontFamily="@font/lexenddecabold"
                 android:gravity="center"
                 android:textColor="#D32F2F"
-                android:textStyle="bold"
                 android:layout_marginTop="32dp"
                 android:padding="16dp"
                 android:background="@drawable/bg_card_red" />

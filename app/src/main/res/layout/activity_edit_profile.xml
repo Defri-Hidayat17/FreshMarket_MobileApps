@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit Profil"
-        android:textStyle="bold"
+        android:fontFamily="@font/lexenddecabold"
         android:textSize="18sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/btnBack"
@@ -92,6 +92,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Isi nama anda"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/lexenddecaregular"
                         android:background="@drawable/edit_text_bg"
                         android:padding="12dp"
                         android:layout_marginBottom="12dp" />
@@ -103,7 +105,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="contoh@gmail.com"
+                        android:textSize="15sp"
                         android:inputType="textEmailAddress"
+                        android:fontFamily="@font/lexenddecaregular"
                         android:background="@drawable/edit_text_bg"
                         android:padding="12dp"
                         android:layout_marginBottom="12dp" />
@@ -120,7 +124,9 @@
                             android:id="@+id/textBirthday"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="DD / MM / YYYY" />
+                            android:text="DD / MM / YYYY"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/lexenddecaregular"/>
                         <ImageView
                             android:id="@+id/btnCalendar"
                             android:layout_width="24dp"
@@ -141,7 +147,9 @@
                             android:id="@+id/textGender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="pilih" />
+                            android:text="pilih"
+                            android:textSize="15sp"
+                            android:fontFamily="@font/lexenddecaregular"/>
                         <ImageView
                             android:id="@+id/btngender"
                             android:layout_width="24dp"
@@ -156,7 +164,9 @@
                         android:id="@+id/editBio"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
+                        android:textSize="15sp"
                         android:hint="Ceritakan sesuatu tentang diri Anda..."
+                        android:fontFamily="@font/lexenddecaregular"
                         android:background="@drawable/edit_text_bg"
                         android:padding="12dp"
                         android:gravity="top"
