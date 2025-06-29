@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
@@ -47,21 +48,22 @@ public class PesananPage extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Pengembalian"));
         tabLayout.addTab(tabLayout.newTab().setText("Dibatalkan"));
 
+// Setelah semua tab ditambahkan
         Typeface customTypeface = ResourcesCompat.getFont(this, R.font.lexenddecasemibold);
 
+// Loop semua tab dan ubah font
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tab != null) {
-                TextView textView = new TextView(this);
-                textView.setText(tab.getText());
-                textView.setTextSize(14);
-                textView.setTypeface(customTypeface);
-                textView.setGravity(Gravity.CENTER);
-                textView.setTextColor(Color.parseColor("#808080")); // atau pakai selector kalau mau
-
-                tab.setCustomView(textView);
+            if (tab != null && tab.getCustomView() == null) {
+                TextView tabTextView = new TextView(this);
+                tabTextView.setText(tab.getText());
+                tabTextView.setTypeface(customTypeface);
+                tabTextView.setTextSize(14); // ukuran bisa kamu sesuaikan
+                tabTextView.setTextColor(getResources().getColorStateList(R.color.tab_selector)); // pakai selector kalau perlu
+                tab.setCustomView(tabTextView);
             }
         }
+
 
 
         // Default fragment saat pertama dibuka
@@ -108,13 +110,15 @@ public class PesananPage extends AppCompatActivity {
         });
     }
 
-    // Animasi saat diklik
     private void playScaleAnimation(View view) {
-        view.animate()
-                .scaleX(0.95f).scaleY(0.95f)
-                .setDuration(100)
-                .withEndAction(() ->
-                        view.animate().scaleX(1f).scaleY(1f).setDuration(100).start())
-                .start();
+        ScaleAnimation scale = new ScaleAnimation(
+                1f, 0.9f, 1f, 0.9f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+        scale.setDuration(100);
+        scale.setRepeatCount(1);
+        scale.setRepeatMode(ScaleAnimation.REVERSE);
+        view.startAnimation(scale);
     }
+
 }

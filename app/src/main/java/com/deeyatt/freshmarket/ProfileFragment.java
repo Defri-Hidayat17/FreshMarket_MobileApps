@@ -103,6 +103,21 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+        View pengaturanAkun = view.findViewById(R.id.itemPengaturanAkun);
+        if (pengaturanAkun != null) {
+            pengaturanAkun.setOnClickListener(v -> {
+                // Animasi scale
+                playScaleAnimation(v);
+
+                // Delay sebelum navigasi
+                v.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), PengaturanAkunActivity.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 150);
+            });
+        }
+
 
 
 

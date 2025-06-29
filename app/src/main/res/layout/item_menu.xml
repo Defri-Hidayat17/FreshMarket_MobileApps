@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Nama Menu"
-        android:fontFamily="@font/lexenddecasemibold"
+        android:fontFamily="@font/lexenddecaregular"
         android:textSize="14sp"
         android:textColor="@android:color/black" />
 

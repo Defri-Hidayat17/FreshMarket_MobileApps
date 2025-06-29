@@ -21,6 +21,9 @@
         android:theme="@style/Theme.FreshMarket"
         tools:targetApi="31">
         <activity
+            android:name=".PengaturanAkunActivity"
+            android:exported="false" />
+        <activity
             android:name=".PesananPage"
             android:exported="false" />
         <activity
