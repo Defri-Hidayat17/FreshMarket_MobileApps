@@ -1,20 +1,189 @@
 package com.deeyatt.freshmarket;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    private static final int REQUEST_PERMISSIONS = 123;
+    private static final int PICK_IMAGE_REQUEST = 100;
+    private static final int CAMERA_REQUEST = 101;
+
+    private CircleImageView imageProfile;
+    private ImageView btnEdit;
+
+    public ProfileFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        imageProfile = view.findViewById(R.id.imageProfile);
+        btnEdit = view.findViewById(R.id.btnEdit);
+
+        View.OnClickListener clickListener = v -> {
+            playScaleAnimation(v);
+            requestPermissions();
+        };
+
+        imageProfile.setOnClickListener(clickListener);
+        btnEdit.setOnClickListener(clickListener);
+
+        View itemEditProfil = view.findViewById(R.id.itemEditProfil);
+        if (itemEditProfil != null) {
+            itemEditProfil.setOnClickListener(v -> {
+                playScaleAnimation(v);
+
+                // Tambahkan delay 300ms sebelum mulai Activity
+                itemEditProfil.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), EditProfileActivity.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 300); // 300 ms delay
+            });
+        }
+
+
+
+        setupMenuItems(view);
+    }
+
+
+
+    private void setupMenuItems(View view) {
+        setMenuItem(view, R.id.itemEditProfil, "Edit Profil", R.drawable.baseline_edit_24);
+        setMenuItem(view, R.id.itemVoucher, "Voucher Saya", R.drawable.baseline_card_giftcard_24);
+        setMenuItem(view, R.id.itemPesanan, "Pesanan Saya", R.drawable.baseline_shopping_bag_24);
+        setMenuItem(view, R.id.itemPengaturanAkun, "Pengaturan Akun", R.drawable.baseline_settings_24);
+        setMenuItem(view, R.id.itemNotifikasi, "Notifikasi", R.drawable.baseline_notifications_24);
+        setMenuItem(view, R.id.itemHubungi, "Hubungi Kami", R.drawable.baseline_call_24);
+        setMenuItem(view, R.id.itemTentang, "Tentang Kami", R.drawable.baseline_info_24);
+    }
+
+    private void setMenuItem(View root, int id, String text, int iconRes) {
+        View item = root.findViewById(id);
+        if (item != null) {
+            ImageView icon = item.findViewById(R.id.iconMenu);
+            TextView label = item.findViewById(R.id.textMenu);
+            if (icon != null) icon.setImageResource(iconRes);
+            if (label != null) label.setText(text);
+        }
+    }
+
+    private void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            }, REQUEST_PERMISSIONS);
+        } else {
+            showImagePickerDialog();
+        }
+    }
+
+    private void showImagePickerDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+        View sheet = getLayoutInflater().inflate(R.layout.dialog_image_picker, null);
+        dialog.setContentView(sheet);
+
+        sheet.findViewById(R.id.btnKamera).setOnClickListener(v -> {
+            openCamera();
+            dialog.dismiss();
+        });
+
+        sheet.findViewById(R.id.btnGaleri).setOnClickListener(v -> {
+            openGallery();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, CAMERA_REQUEST);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST &&
+                resultCode == AppCompatActivity.RESULT_OK &&
+                data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            imageProfile.setImageURI(imageUri);
+        }
+
+        if (requestCode == CAMERA_REQUEST &&
+                resultCode == AppCompatActivity.RESULT_OK &&
+                data != null && data.getExtras() != null) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imageProfile.setImageBitmap(photo);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                showImagePickerDialog();
+            } else {
+                Toast.makeText(getContext(), "Akses ditolak.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void playScaleAnimation(View view) {
+        ScaleAnimation scale = new ScaleAnimation(
+                1f, 0.9f, 1f, 0.9f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+        scale.setDuration(100);
+        scale.setRepeatCount(1);
+        scale.setRepeatMode(ScaleAnimation.REVERSE);
+        view.startAnimation(scale);
     }
 }

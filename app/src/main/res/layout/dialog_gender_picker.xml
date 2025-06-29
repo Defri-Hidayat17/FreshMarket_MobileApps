@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Laki-laki -->
+    <LinearLayout
+        android:id="@+id/cardMale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/card_gender_bg"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_male_24"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btnMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Laki-laki"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Perempuan -->
+    <LinearLayout
+        android:id="@+id/cardFemale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/card_gender_bg"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_female_24"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/btnFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Perempuan"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

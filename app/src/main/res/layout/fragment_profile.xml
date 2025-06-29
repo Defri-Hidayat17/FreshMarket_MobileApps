@@ -2,35 +2,152 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@drawable/bg_profile"
+    tools:context=".ProfileFragment">
 
-    <TextView
-        android:id="@+id/textViewProfileTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profil Pengguna 👤"
-        android:textSize="20sp"
-        android:textStyle="bold"
+    <!-- Bagian FOTO -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:src="@drawable/baseline_person_24"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="2dp"
+        app:tint="@android:color/white"
+        android:padding="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
+        android:layout_marginTop="24dp" />
 
-    <!-- Contoh info profil -->
+    <!-- Ikon Edit -->
+    <ImageView
+        android:id="@+id/btnEdit"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/baseline_camera_alt_24"
+        android:background="@drawable/circle_white"
+        android:elevation="4dp"
+        android:padding="6dp"
+        android:layout_margin="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/imageProfile"
+        app:layout_constraintEnd_toEndOf="@id/imageProfile" />
+
+    <!-- Nama -->
     <TextView
-        android:id="@+id/textViewProfileInfo"
+        android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Nama: Defri\nEmail: defri@example.com"
+        android:text="Depri Dapa"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:textStyle="bold"
+        android:fontFamily="@font/lexenddecasemibold"
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewProfileTitle" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
 
+    <!-- Bagian scrollable -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/textView11"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="95dp"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="100dp">>
+
+            <!-- UMUM -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Umum"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:layout_marginTop="4dp">
+
+                <include layout="@layout/item_menu" android:id="@+id/itemEditProfil" android:tag="Edit Profil" />
+                <include layout="@layout/item_menu" android:id="@+id/itemVoucher" android:tag="Voucher Saya" />
+                <include layout="@layout/item_menu" android:id="@+id/itemPesanan" android:tag="Pesanan Saya" />
+            </LinearLayout>
+
+            <!-- PENGATURAN -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pengaturan"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:layout_marginTop="4dp">
+
+                <include layout="@layout/item_menu" android:id="@+id/itemPengaturanAkun" android:tag="Pengaturan Akun" />
+                <include layout="@layout/item_menu" android:id="@+id/itemNotifikasi" android:tag="Notifikasi" />
+            </LinearLayout>
+
+            <!-- LAINNYA -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lainnya"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:layout_marginTop="4dp">
+
+                <include layout="@layout/item_menu" android:id="@+id/itemHubungi" android:tag="Hubungi Kami" />
+                <include layout="@layout/item_menu" android:id="@+id/itemTentang" android:tag="Tentang Kami" />
+            </LinearLayout>
+
+            <!-- LOGOUT -->
+            <TextView
+                android:id="@+id/itemLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:gravity="center"
+                android:textColor="#D32F2F"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                android:padding="16dp"
+                android:background="@drawable/bg_card_red" />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
