@@ -119,7 +119,33 @@ public class ProfileFragment extends Fragment {
         }
 
 
+        View Notifikasi = view.findViewById(R.id.itemNotifikasi);
+        if (Notifikasi != null) {
+            Notifikasi.setOnClickListener(v -> {
+                // Animasi scale
+                playScaleAnimation(v);
 
+                // Delay sebelum navigasi
+                v.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), PengaturanNotifikasi.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 150);
+            });
+        }
+
+        View hubungiKami = view.findViewById(R.id.itemHubungi);
+        if (hubungiKami != null) {
+            hubungiKami.setOnClickListener(v -> {
+                playScaleAnimation(v);
+
+                v.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), HubungiKami.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 150);
+            });
+        }
 
 
         setupMenuItems(view);

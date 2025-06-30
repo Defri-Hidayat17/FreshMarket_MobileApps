@@ -5,7 +5,8 @@
     <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- Hanya untuk Android 32 ke bawah -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -20,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FreshMarket"
         tools:targetApi="31">
+        <activity
+            android:name=".HubungiKami"
+            android:exported="false" />
+        <activity
+            android:name=".PengaturanNotifikasi"
+            android:exported="false" />
         <activity
             android:name=".PengaturanAkunActivity"
             android:exported="false" />
