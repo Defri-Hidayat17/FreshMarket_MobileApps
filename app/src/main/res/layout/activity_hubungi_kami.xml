@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/white"
+    android:background="@drawable/bg_hubkami"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HubungiKami">
@@ -31,16 +31,6 @@
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="@id/btnBack" />
 
-    <ImageView
-        android:id="@+id/imageView30"
-        android:layout_width="369dp"
-        android:layout_height="262dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498"
-        app:srcCompat="@drawable/contactus" />
 
     <FrameLayout
         android:id="@+id/blurOverlay"
@@ -248,4 +238,38 @@
             </LinearLayout>
         </ScrollView>
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.122"
+        app:srcCompat="@drawable/cs" />
+
+    <ImageView
+        android:id="@+id/imageView30"
+        android:layout_width="248dp"
+        android:layout_height="68dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.335"
+        app:srcCompat="@drawable/cs_label" />
+
+    <ImageView
+        android:id="@+id/imageView31"
+        android:layout_width="64dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.723"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.374"
+        app:srcCompat="@drawable/cs_click" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,22 @@
 package com.deeyatt.freshmarket;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,40 +67,30 @@ public class ProfileFragment extends Fragment {
         if (itemEditProfil != null) {
             itemEditProfil.setOnClickListener(v -> {
                 playScaleAnimation(v);
-
-                // Tambahkan delay 300ms sebelum mulai Activity
-                itemEditProfil.postDelayed(() -> {
+                v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), EditProfileActivity.class);
                     startActivity(intent);
                     requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 300); // 300 ms delay
+                }, 300);
             });
         }
 
         View itemVoucher = view.findViewById(R.id.itemVoucher);
         if (itemVoucher != null) {
             itemVoucher.setOnClickListener(v -> {
-                // Scale animation
-                v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100)
-                        .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(100).start())
-                        .start();
-
-                // Delay lalu navigasi ke VoucherPage
-                itemVoucher.postDelayed(() -> {
+                playScaleAnimation(v);
+                v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), VoucherPage.class);
                     startActivity(intent);
                     requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 300); // 300ms delay
+                }, 300);
             });
         }
 
         View itemPesanan = view.findViewById(R.id.itemPesanan);
         if (itemPesanan != null) {
             itemPesanan.setOnClickListener(v -> {
-                // Animasi scale
                 playScaleAnimation(v);
-
-                // Delay sebelum navigasi
                 v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), PesananPage.class);
                     startActivity(intent);
@@ -106,10 +102,7 @@ public class ProfileFragment extends Fragment {
         View pengaturanAkun = view.findViewById(R.id.itemPengaturanAkun);
         if (pengaturanAkun != null) {
             pengaturanAkun.setOnClickListener(v -> {
-                // Animasi scale
                 playScaleAnimation(v);
-
-                // Delay sebelum navigasi
                 v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), PengaturanAkunActivity.class);
                     startActivity(intent);
@@ -118,14 +111,10 @@ public class ProfileFragment extends Fragment {
             });
         }
 
-
         View Notifikasi = view.findViewById(R.id.itemNotifikasi);
         if (Notifikasi != null) {
             Notifikasi.setOnClickListener(v -> {
-                // Animasi scale
                 playScaleAnimation(v);
-
-                // Delay sebelum navigasi
                 v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), PengaturanNotifikasi.class);
                     startActivity(intent);
@@ -138,7 +127,6 @@ public class ProfileFragment extends Fragment {
         if (hubungiKami != null) {
             hubungiKami.setOnClickListener(v -> {
                 playScaleAnimation(v);
-
                 v.postDelayed(() -> {
                     Intent intent = new Intent(requireContext(), HubungiKami.class);
                     startActivity(intent);
@@ -147,11 +135,78 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+        View tentangKami = view.findViewById(R.id.itemTentang);
+        if (tentangKami != null) {
+            tentangKami.setOnClickListener(v -> {
+                playScaleAnimation(v);
+                v.postDelayed(() -> {
+                    Intent intent = new Intent(requireContext(), TentangKami.class);
+                    startActivity(intent);
+                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 150);
+            });
+        }
+
+        // Tambahkan logout
+        View itemLogout = view.findViewById(R.id.itemLogout);
+        if (itemLogout != null) {
+            itemLogout.setOnClickListener(v -> showLogoutDialog(v));
+        }
 
         setupMenuItems(view);
     }
 
+    private void playScaleAnimation(View view) {
+        ScaleAnimation scale = new ScaleAnimation(
+                1f, 0.9f, 1f, 0.9f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+        scale.setDuration(100);
+        scale.setRepeatCount(1);
+        scale.setRepeatMode(ScaleAnimation.REVERSE);
+        view.startAnimation(scale);
+    }
 
+    private void showLogoutDialog(View anchorView) {
+        playScaleAnimation(anchorView);
+
+        Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_logout);
+        dialog.setCancelable(true);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setDimAmount(0.6f); // background gelap
+            window.setGravity(Gravity.CENTER);
+        }
+
+        Button btnTidak = dialog.findViewById(R.id.btnTidak);
+        Button btnIya = dialog.findViewById(R.id.btnIya);
+
+        btnTidak.setOnClickListener(v -> dialog.dismiss());
+
+        btnIya.setOnClickListener(v -> {
+            dialog.dismiss();
+
+            // Optional: logout logic kalau pakai Firebase
+            // FirebaseAuth.getInstance().signOut();
+
+            Toast.makeText(getContext(), "Logout berhasil!", Toast.LENGTH_SHORT).show();
+
+            // Delay 500ms agar toast sempat tampil, lalu navigasi ke LoginPage
+            new android.os.Handler().postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), loginpage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // hapus semua activity sebelumnya
+                startActivity(intent);
+            }, 500);
+        });
+
+
+        dialog.show();
+    }
 
     private void setupMenuItems(View view) {
         setMenuItem(view, R.id.itemEditProfil, "Edit Profil", R.drawable.baseline_edit_24);
@@ -249,16 +304,5 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), "Akses ditolak.", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private void playScaleAnimation(View view) {
-        ScaleAnimation scale = new ScaleAnimation(
-                1f, 0.9f, 1f, 0.9f,
-                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
-                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
-        scale.setDuration(100);
-        scale.setRepeatCount(1);
-        scale.setRepeatMode(ScaleAnimation.REVERSE);
-        view.startAnimation(scale);
     }
 }

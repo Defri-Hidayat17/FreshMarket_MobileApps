@@ -1,5 +1,6 @@
 package com.deeyatt.freshmarket;
 
+import android.animation.ObjectAnimator;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,7 +18,7 @@ import androidx.cardview.widget.CardView;
 
 public class HubungiKami extends AppCompatActivity {
 
-    ImageView btnBack, imageView30;
+    ImageView btnBack, imageView30, imageView31;
     FrameLayout blurOverlay, contactSheet;
     CardView cardWa, cardIg, cardFb, cardEmail, cardTt;
 
@@ -29,6 +30,7 @@ public class HubungiKami extends AppCompatActivity {
         // Inisialisasi view
         btnBack = findViewById(R.id.btnBack);
         imageView30 = findViewById(R.id.imageView30);
+        imageView31 = findViewById(R.id.imageView31);
         blurOverlay = findViewById(R.id.blurOverlay);
         contactSheet = findViewById(R.id.contactSheet);
 
@@ -37,6 +39,20 @@ public class HubungiKami extends AppCompatActivity {
         cardFb = findViewById(R.id.cardFb);
         cardEmail = findViewById(R.id.cardEmail);
         cardTt = findViewById(R.id.cardTt);
+
+
+        // Animasi pulse terus menerus
+        ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(imageView31, "scaleX", 1f, 1.1f);
+        ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(imageView31, "scaleY", 1f, 1.1f);
+        scaleUpX.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleUpY.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleUpX.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleUpY.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleUpX.setDuration(600);
+        scaleUpY.setDuration(600);
+
+        scaleUpX.start();
+        scaleUpY.start();
 
         // Tombol kembali
         btnBack.setOnClickListener(v -> {
@@ -63,9 +79,9 @@ public class HubungiKami extends AppCompatActivity {
 
         // Semua CardView kontak dengan animasi + aksi
         setClickWithAnimation(cardWa, () -> openWhatsApp("6285210619890"));
-        setClickWithAnimation(cardIg, () -> openInstagram("defrilugashidayat"));
+        setClickWithAnimation(cardIg, () -> openInstagram("freshmarket2.id"));
         setClickWithAnimation(cardFb, () -> openFacebook("Defri Lugas Hidayat"));
-        setClickWithAnimation(cardEmail, () -> openEmail("defrilugas46@gmail.com"));
+        setClickWithAnimation(cardEmail, () -> openEmail("attrsyahdffa@gmail.com"));
         setClickWithAnimation(cardTt, () -> openTiktok("dffaatrsyh_"));
     }
 

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TentangKami">
+
+    <!-- Tombol Back -->
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/baseline_arrow_back_24"
+        android:contentDescription="Kembali"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Judul -->
+    <TextView
+        android:id="@+id/titlePengaturan1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tentang Kami"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/lexenddecabold"
+        android:layout_marginStart="12dp"
+        app:layout_constraintTop_toTopOf="@id/btnBack"
+        app:layout_constraintStart_toEndOf="@id/btnBack" />
+
+    <!-- Scrollable Konten -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true"
+
+            app:cardBackgroundColor="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:gravity="center_horizontal">
+
+                <!-- Logo -->
+                <ImageView
+                    android:id="@+id/logoFM"
+                    android:layout_width="80dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/logo_fm_kotak"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Logo Fresh Market"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Deskripsi -->
+                <TextView
+                    android:id="@+id/descText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Halo, saya Hermansyah, owner dari aplikasi Fresh Market. Aplikasi ini saya bangun dengan tujuan sederhana namun penting: menghadirkan bahan pangan segar langsung ke tangan Anda, tanpa ribet dan tanpa mengorbankan kualitas.\n\nBermula dari kebutuhan sehari-hari dan keinginan untuk membantu masyarakat sekitar mendapatkan sayur-mayur serta kebutuhan dapur yang segar, saya mulai mengembangkan Fresh Market dari tempat tinggal saya di Perumahan Grand Cikarang City 2, Kedung Waringin, Blok F24 No. 20.\n\nMelalui Fresh Market, saya ingin menawarkan cara belanja yang praktis, cepat, dan tetap terjangkau, sekaligus mendukung para petani dan pedagang lokal agar terus berkembang. Setiap produk yang tersedia telah dipilih dengan teliti agar Anda selalu mendapatkan yang terbaik.\n\nSaya percaya bahwa belanja sayur tidak harus repot. Cukup dari rumah, bahan segar bisa langsung sampai ke dapur Anda. Terima kasih telah mempercayakan kebutuhan dapur Anda kepada Fresh Market."
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/lexenddecaregular"
+                    android:lineSpacingExtra="4dp" />
+
+                <!-- Judul Kritik dan Saran -->
+                <TextView
+                    android:id="@+id/kritikTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kritik dan Saran"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/lexenddecaregular" />
+
+                <!-- Isi Kritik -->
+                <TextView
+                    android:id="@+id/kritikText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Untuk kritik dan saran, bisa hubungi nomor di bawah ini:"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/lexenddecaregular" />
+
+                <!-- Nomor Call Center -->
+                <TextView
+                    android:id="@+id/callCenter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Call Center FRESH MARKET\n0852-1061-9890"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/lexenddecaregular" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

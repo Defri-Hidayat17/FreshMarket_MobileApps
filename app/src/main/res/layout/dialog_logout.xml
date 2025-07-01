@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_card"
+    android:layout_gravity="center"
+    android:elevation="8dp">
+
+    <TextView
+        android:id="@+id/textPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apakah anda yakin ingin Logout?"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:fontFamily="@font/lexenddecasemibold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnTidak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tidak"
+            android:textColor="@color/black"
+            android:backgroundTint="#E0E0E0"
+            android:fontFamily="@font/lexenddecasemibold"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnIya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iya"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#D32F2F"
+            android:fontFamily="@font/lexenddecasemibold" />
+    </LinearLayout>
+</LinearLayout>
