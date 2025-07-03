@@ -39,62 +39,53 @@ public class EditProfileActivity extends AppCompatActivity {
     private CircleImageView imageProfile;
     private ImageView btnEditPhoto, iconCalendar;
     private TextView textBirthday;
-
     private TextView textGender;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Inset handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Bind view
         imageProfile = findViewById(R.id.imageProfile);
         btnEditPhoto = findViewById(R.id.btnEditPhoto);
         textBirthday = findViewById(R.id.textBirthday);
         iconCalendar = findViewById(R.id.btnCalendar);
-        TextView textGender = findViewById(R.id.textGender);
+        textGender = findViewById(R.id.textGender);
         ImageView btnGender = findViewById(R.id.btngender);
-
-
         ImageView btnBack = findViewById(R.id.btnBack);
+
         btnBack.setOnClickListener(v -> {
             playScaleAnimation(v);
-
-            // Tunggu animasi selesai baru finish
             v.postDelayed(() -> {
                 finish();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150); // 150ms = durasi animasi playScaleAnimation()
+            }, 150);
         });
 
-
-
-
         View.OnClickListener genderClickListener = v -> {
-            showGenderPicker(); // panggil method
+            playScaleAnimation(v);
+            showGenderPicker();
         };
 
         textGender.setOnClickListener(genderClickListener);
         btnGender.setOnClickListener(genderClickListener);
 
-        // Klik untuk foto
         View.OnClickListener imageClick = v -> {
             playScaleAnimation(v);
             requestPermissions();
         };
+
         imageProfile.setOnClickListener(imageClick);
         btnEditPhoto.setOnClickListener(imageClick);
 
-        // Klik tanggal lahir
         View.OnClickListener calendarClick = v -> {
+            playScaleAnimation(v);
             Toast.makeText(this, "Kalender dibuka", Toast.LENGTH_SHORT).show();
 
             final Calendar calendar = Calendar.getInstance();
@@ -104,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     this,
-                    R.style.DatePickerTheme, // Pakai tema ini!
+                    R.style.DatePickerTheme,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
                         String dateStr = String.format("%02d / %02d / %04d", selectedDay, selectedMonth + 1, selectedYear);
                         textBirthday.setText(dateStr);
@@ -112,12 +103,10 @@ public class EditProfileActivity extends AppCompatActivity {
                     year, month, day
             );
 
-
             datePickerDialog.setOnShowListener(dialog -> {
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#007F5F"));
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#007F5F"));
             });
-
 
             datePickerDialog.show();
         };
@@ -126,7 +115,6 @@ public class EditProfileActivity extends AppCompatActivity {
         iconCalendar.setOnClickListener(calendarClick);
     }
 
-    // Izin & ambil gambar
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -145,11 +133,13 @@ public class EditProfileActivity extends AppCompatActivity {
         dialog.setContentView(sheet);
 
         sheet.findViewById(R.id.btnKamera).setOnClickListener(v -> {
+            playScaleAnimation(v);
             openCamera();
             dialog.dismiss();
         });
 
         sheet.findViewById(R.id.btnGaleri).setOnClickListener(v -> {
+            playScaleAnimation(v);
             openGallery();
             dialog.dismiss();
         });
@@ -205,7 +195,8 @@ public class EditProfileActivity extends AppCompatActivity {
         ScaleAnimation scale = new ScaleAnimation(
                 1f, 0.9f, 1f, 0.9f,
                 ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
-                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        );
         scale.setDuration(100);
         scale.setRepeatCount(1);
         scale.setRepeatMode(ScaleAnimation.REVERSE);
@@ -217,23 +208,26 @@ public class EditProfileActivity extends AppCompatActivity {
         View sheet = getLayoutInflater().inflate(R.layout.dialog_gender_picker, null);
         dialog.setContentView(sheet);
 
-        TextView btnMale = sheet.findViewById(R.id.btnMale);
-        TextView btnFemale = sheet.findViewById(R.id.btnFemale);
+        View layoutMale = sheet.findViewById(R.id.btnMale); // ini kotak, bukan TextView saja
+        View layoutFemale = sheet.findViewById(R.id.btnFemale);
 
-        btnMale.setOnClickListener(v -> {
-            TextView textGender = findViewById(R.id.textGender);
-            textGender.setText("Laki-laki");
-            dialog.dismiss(); // hanya tutup dialog, bukan activity
+        layoutMale.setOnClickListener(v -> {
+            playScaleAnimation(v);
+            v.postDelayed(() -> {
+                textGender.setText("Laki-laki");
+                dialog.dismiss();
+            }, 150); // delay sesuai durasi animasi
         });
 
-        btnFemale.setOnClickListener(v -> {
-            TextView textGender = findViewById(R.id.textGender);
-            textGender.setText("Perempuan");
-            dialog.dismiss();
+        layoutFemale.setOnClickListener(v -> {
+            playScaleAnimation(v);
+            v.postDelayed(() -> {
+                textGender.setText("Perempuan");
+                dialog.dismiss();
+            }, 150);
         });
+
 
         dialog.show();
     }
-
-
 }

@@ -72,6 +72,20 @@ public class HomeFragment extends Fragment {
             scrollView.scrollTo(scrollTo, 0);
         });
 
+
+        ImageView imageViewSayuran = view.findViewById(R.id.imageView24);
+
+        imageViewSayuran.setOnClickListener(v -> {
+            playScaleAnimation(v);
+
+            v.postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), menu_sayuran.class);
+                startActivity(intent);
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }, 150);
+        });
+
+
         imageView20 = view.findViewById(R.id.imageView20);
 
         imageView20.setOnClickListener(v -> {
@@ -173,4 +187,16 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+    private void playScaleAnimation(View view) {
+        ScaleAnimation scale = new ScaleAnimation(
+                1f, 0.9f, 1f, 0.9f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        );
+        scale.setDuration(100);
+        scale.setRepeatCount(1);
+        scale.setRepeatMode(ScaleAnimation.REVERSE);
+        view.startAnimation(scale);
+    }
+
 }

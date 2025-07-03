@@ -11,23 +11,20 @@ public class homepage extends AppCompatActivity {
 
     BottomNavigationView bottomNav;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-
         bottomNav = findViewById(R.id.bottomNavigationView);
+
+        // Matikan ripple
         bottomNav.setItemRippleColor(ColorStateList.valueOf(Color.TRANSPARENT));
-
-
-        // ✅ Matikan ripple
         bottomNav.setItemRippleColor(null);
 
-        // ✅ Pasang listener SATU KALI SAJA
+        // ✅ Pasang listener untuk navigasi fragment
         bottomNav.setOnItemSelectedListener(item -> {
-            // Reset scale semua item
+            // Reset semua item skala normal
             for (int i = 0; i < bottomNav.getMenu().size(); i++) {
                 int id = bottomNav.getMenu().getItem(i).getItemId();
                 if (bottomNav.findViewById(id) != null) {
@@ -35,12 +32,12 @@ public class homepage extends AppCompatActivity {
                 }
             }
 
-            // Scale item yang dipilih
+            // Scale item aktif
             if (bottomNav.findViewById(item.getItemId()) != null) {
                 bottomNav.findViewById(item.getItemId()).animate().scaleX(1.2f).scaleY(1.2f).setDuration(150).start();
             }
 
-            // Load fragment
+            // Load fragment sesuai item
             Fragment selectedFragment;
             if (item.getItemId() == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
@@ -58,9 +55,16 @@ public class homepage extends AppCompatActivity {
             return true;
         });
 
-        // ✅ Pertama kali buka: Home
+        // ✅ Baca intent dan set awal fragment
         if (savedInstanceState == null) {
-            bottomNav.setSelectedItemId(R.id.nav_home);
+            String destination = getIntent().getStringExtra("navigate_to");
+            if ("cart".equals(destination)) {
+                bottomNav.setSelectedItemId(R.id.nav_cart);
+            } else if ("profile".equals(destination)) {
+                bottomNav.setSelectedItemId(R.id.nav_profile);
+            } else {
+                bottomNav.setSelectedItemId(R.id.nav_home);
+            }
         }
     }
 }

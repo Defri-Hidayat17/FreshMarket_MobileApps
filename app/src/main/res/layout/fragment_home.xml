@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".homepage"
-    android:background="@drawable/bg_home_page">
+    android:background="@drawable/bg_home_page_revisi">
 
 
     <TextView
@@ -127,7 +127,7 @@
         android:layout_height="130dp"
         android:overScrollMode="never"
         android:scrollbarSize="1dp"
-        android:scrollbars="horizontal"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

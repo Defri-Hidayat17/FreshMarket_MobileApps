@@ -1,0 +1,14 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Warna isi -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- Garis pinggir (stroke) -->
+    <stroke
+        android:width="0dp"
+        android:color="#000000" />
+
+    <!-- Ukuran opsional, bisa diatur di ImageView juga -->
+    <size android:width="40dp" android:height="40dp" />
+</shape>
