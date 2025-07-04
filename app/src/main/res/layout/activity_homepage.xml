@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_nav_menu"
+        app:itemActiveIndicatorStyle="@style/CustomActiveIndicator"
         android:background="@drawable/bottom_nav_bg"
         app:itemIconTint="@color/selector_bottom_nav"
         app:itemTextColor="@color/selector_bottom_nav"

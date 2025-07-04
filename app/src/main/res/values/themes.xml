@@ -28,6 +28,14 @@
         <item name="colorAccent">#007F5F</item>
     </style>
 
+    <style name="CustomActiveIndicator" parent="">
+        <item name="android:color">@android:color/transparent</item> <!-- atau ganti dengan warna lain -->
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+
+
 
 
     <style name="Theme.FreshMarket" parent="Base.Theme.FreshMarket"/>
