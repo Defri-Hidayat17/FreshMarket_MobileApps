@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menu_sayuran"
-    android:background="@drawable/bg_sayuranpage">
+    tools:context=".menu_sembako"
+    android:background="@drawable/bg_sembakopage">
 
     <!-- Tombol Back -->
     <ImageView
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/lexenddecabold"
-        android:text="Sayuran"
+        android:text="Sembako"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +62,7 @@
             android:paddingRight="16dp">
 
 
-            <!-- Baris 1: Bayam & Wortel -->
+            <!-- Baris 1: mie & minyak -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,11 +76,11 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/imgSayur1"
+                        android:id="@+id/imgindomie"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:src="@drawable/bayam" />
+                        android:src="@drawable/indomie" />
 
                     <ImageView
                         android:id="@+id/btnKeranjang1"
@@ -98,11 +98,11 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/imgSayur2"
+                        android:id="@+id/imgminyak"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:src="@drawable/wortel" />
+                        android:src="@drawable/minyakgoreng" />
 
                     <ImageView
                         android:id="@+id/btnKeranjang2"
@@ -114,7 +114,7 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- Baris 2: Brokoli & Pokcoy -->
+            <!-- Baris 2: beras & tepung -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,11 +128,11 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/imgSayur3"
+                        android:id="@+id/imgberas"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:src="@drawable/brokoli" />
+                        android:src="@drawable/berasfortune" />
 
                     <ImageView
                         android:id="@+id/btnKeranjang3"
@@ -150,66 +150,14 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/imgSayur4"
+                        android:id="@+id/imgtepung"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:src="@drawable/pokcoy" />
+                        android:src="@drawable/tepungtrigu" />
 
                     <ImageView
                         android:id="@+id/btnKeranjang4"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="17dp"
-                        android:src="@drawable/add_keranjang" />
-                </FrameLayout>
-            </LinearLayout>
-
-            <!-- Baris 3: Kembangkol & Tomat -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/imgSayur5"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/kembangkol" />
-
-                    <ImageView
-                        android:id="@+id/btnKeranjang5"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="17dp"
-                        android:src="@drawable/add_keranjang" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/imgSayur6"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/tomat" />
-
-                    <ImageView
-                        android:id="@+id/btnKeranjang6"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="bottom|end"
@@ -255,6 +203,5 @@
 
         </LinearLayout>
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

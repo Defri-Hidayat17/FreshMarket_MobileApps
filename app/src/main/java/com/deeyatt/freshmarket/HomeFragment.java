@@ -86,6 +86,58 @@ public class HomeFragment extends Fragment {
         });
 
 
+        ImageView imageViewBuah = view.findViewById(R.id.imageView25);
+
+        imageViewBuah.setOnClickListener(v -> {
+            playScaleAnimation(v);
+
+            v.postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), menu_buah.class);
+                startActivity(intent);
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }, 150);
+        });
+
+        ImageView imageViewDaging = view.findViewById(R.id.imageView26);
+
+        imageViewDaging.setOnClickListener(v -> {
+            playScaleAnimation(v);
+
+            v.postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), menu_daging.class);
+                startActivity(intent);
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }, 150);
+        });
+
+
+        ImageView imageViewSembako = view.findViewById(R.id.imageView27);
+
+        imageViewSembako.setOnClickListener(v -> {
+            playScaleAnimation(v);
+
+            v.postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), menu_sembako.class);
+                startActivity(intent);
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }, 150);
+        });
+
+
+
+        ImageView imageViewFrozenfood = view.findViewById(R.id.imageView28);
+
+        imageViewFrozenfood.setOnClickListener(v -> {
+            playScaleAnimation(v);
+
+            v.postDelayed(() -> {
+                Intent intent = new Intent(requireContext(), menu_frozenfood.class);
+                startActivity(intent);
+                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }, 150);
+        });
+
+
         imageView20 = view.findViewById(R.id.imageView20);
 
         imageView20.setOnClickListener(v -> {
