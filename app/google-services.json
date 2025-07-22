@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338745867709",
+    "project_id": "freshmarketapps",
+    "storage_bucket": "freshmarketapps.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338745867709:android:bfe22ce121838bd82aa6d4",
+        "android_client_info": {
+          "package_name": "com.deeyatt.freshmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338745867709-l11glmrh4afvfm9ubldli6ne2irf4gjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deeyatt.freshmarket",
+            "certificate_hash": "3a2c6cf00478fe60c9aaec75460d5e61fadf5e51"
+          }
+        },
+        {
+          "client_id": "338745867709-6nba6uv3vk1p09ap61evq86309jqghkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGTQplB-mtXrpkdpOVhMUwpqNXv81dHvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338745867709-6nba6uv3vk1p09ap61evq86309jqghkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

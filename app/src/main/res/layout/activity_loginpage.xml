@@ -9,7 +9,7 @@
     android:background="@drawable/login_page">
 
     <EditText
-        android:id="@+id/inputPhone"
+        android:id="@+id/inputEmail"
         android:layout_width="320dp"
         android:layout_height="45dp"
         android:outlineProvider="none"

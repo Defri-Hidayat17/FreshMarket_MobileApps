@@ -2,13 +2,16 @@ package com.deeyatt.freshmarket;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,97 +67,35 @@ public class ProfileFragment extends Fragment {
         imageProfile.setOnClickListener(clickListener);
         btnEdit.setOnClickListener(clickListener);
 
-        View itemEditProfil = view.findViewById(R.id.itemEditProfil);
-        if (itemEditProfil != null) {
-            itemEditProfil.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), EditProfileActivity.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 300);
-            });
+        initMenu(view);
+        setupMenuItems(view);
+    }
+
+    private void initMenu(View view) {
+        int[] menuIds = { R.id.itemEditProfil, R.id.itemVoucher, R.id.itemPesanan,
+                R.id.itemPengaturanAkun, R.id.itemNotifikasi, R.id.itemHubungi, R.id.itemTentang };
+        Class<?>[] menuClasses = { EditProfileActivity.class, VoucherPage.class, PesananPage.class,
+                PengaturanAkunActivity.class, PengaturanNotifikasi.class, HubungiKami.class, TentangKami.class };
+
+        for (int i = 0; i < menuIds.length; i++) {
+            View item = view.findViewById(menuIds[i]);
+            if (item != null) {
+                Class<?> destination = menuClasses[i];
+                item.setOnClickListener(v -> {
+                    playScaleAnimation(v);
+                    v.postDelayed(() -> {
+                        Intent intent = new Intent(requireContext(), destination);
+                        startActivity(intent);
+                        requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }, 150);
+                });
+            }
         }
 
-        View itemVoucher = view.findViewById(R.id.itemVoucher);
-        if (itemVoucher != null) {
-            itemVoucher.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), VoucherPage.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 300);
-            });
-        }
-
-        View itemPesanan = view.findViewById(R.id.itemPesanan);
-        if (itemPesanan != null) {
-            itemPesanan.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), PesananPage.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 150);
-            });
-        }
-
-        View pengaturanAkun = view.findViewById(R.id.itemPengaturanAkun);
-        if (pengaturanAkun != null) {
-            pengaturanAkun.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), PengaturanAkunActivity.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 150);
-            });
-        }
-
-        View Notifikasi = view.findViewById(R.id.itemNotifikasi);
-        if (Notifikasi != null) {
-            Notifikasi.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), PengaturanNotifikasi.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 150);
-            });
-        }
-
-        View hubungiKami = view.findViewById(R.id.itemHubungi);
-        if (hubungiKami != null) {
-            hubungiKami.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), HubungiKami.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 150);
-            });
-        }
-
-        View tentangKami = view.findViewById(R.id.itemTentang);
-        if (tentangKami != null) {
-            tentangKami.setOnClickListener(v -> {
-                playScaleAnimation(v);
-                v.postDelayed(() -> {
-                    Intent intent = new Intent(requireContext(), TentangKami.class);
-                    startActivity(intent);
-                    requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }, 150);
-            });
-        }
-
-        // Tambahkan logout
         View itemLogout = view.findViewById(R.id.itemLogout);
         if (itemLogout != null) {
-            itemLogout.setOnClickListener(v -> showLogoutDialog(v));
+            itemLogout.setOnClickListener(this::showLogoutDialog);
         }
-
-        setupMenuItems(view);
     }
 
     private void playScaleAnimation(View view) {
@@ -179,7 +121,7 @@ public class ProfileFragment extends Fragment {
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            window.setDimAmount(0.6f); // background gelap
+            window.setDimAmount(0.6f);
             window.setGravity(Gravity.CENTER);
         }
 
@@ -191,19 +133,21 @@ public class ProfileFragment extends Fragment {
         btnIya.setOnClickListener(v -> {
             dialog.dismiss();
 
-            // Optional: logout logic kalau pakai Firebase
-            // FirebaseAuth.getInstance().signOut();
+            SharedPreferences sharedPreferences = requireContext().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("rememberMe", false);
+            editor.apply();
 
-            Toast.makeText(getContext(), "Logout berhasil!", Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
 
-            // Delay 500ms agar toast sempat tampil, lalu navigasi ke LoginPage
-            new android.os.Handler().postDelayed(() -> {
+            Toast.makeText(requireContext(), "Berhasil logout akun", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(() -> {
                 Intent intent = new Intent(requireContext(), loginpage.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // hapus semua activity sebelumnya
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }, 500);
         });
-
 
         dialog.show();
     }
@@ -275,30 +219,20 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST &&
-                resultCode == AppCompatActivity.RESULT_OK &&
-                data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == AppCompatActivity.RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             imageProfile.setImageURI(imageUri);
-        }
-
-        if (requestCode == CAMERA_REQUEST &&
-                resultCode == AppCompatActivity.RESULT_OK &&
-                data != null && data.getExtras() != null) {
+        } else if (requestCode == CAMERA_REQUEST && resultCode == AppCompatActivity.RESULT_OK && data != null && data.getExtras() != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             imageProfile.setImageBitmap(photo);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 showImagePickerDialog();
             } else {
                 Toast.makeText(getContext(), "Akses ditolak.", Toast.LENGTH_SHORT).show();

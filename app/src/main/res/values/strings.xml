@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">FreshMarket</string>
+    <string name="default_web_client_id">338745867709-l11glmrh4afvfm9ubldli6ne2irf4gjq.apps.googleusercontent.com</string>
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
