@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -119,7 +121,17 @@ public class daftarakunpage extends AppCompatActivity {
                                         startActivity(new Intent(this, verifikasiotp_page.class));
                                         finish();
                                     } else {
-                                        Toast.makeText(this, "Gagal daftar: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Exception exception = task.getException();
+                                        if (exception != null && exception.getMessage() != null &&
+                                                exception.getMessage().contains("The email address is already in use")) {
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    "Email ini sudah digunakan. Silakan login atau pakai Google Sign-In.",
+                                                    Snackbar.LENGTH_LONG).show();
+
+                                        } else {
+                                            Toast.makeText(this, "Gagal daftar: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+
 
                                         // Log signup failed
                                         Bundle errBundle = new Bundle();

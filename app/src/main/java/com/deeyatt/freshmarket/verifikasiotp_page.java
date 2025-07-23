@@ -1,6 +1,7 @@
 package com.deeyatt.freshmarket;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -13,11 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -59,6 +62,7 @@ public class verifikasiotp_page extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         overlay = findViewById(R.id.overlay);
 
+
         // Initial state
         textView1.setVisibility(View.VISIBLE);
         successText.setVisibility(View.VISIBLE);
@@ -92,10 +96,24 @@ public class verifikasiotp_page extends AppCompatActivity {
 
                 user.sendEmailVerification().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(verifikasiotp_page.this,
-                                "Email verifikasi telah dikirim ke " + user.getEmail(),
-                                Toast.LENGTH_LONG).show();
+                        // Buat snackbar dengan pesan verifikasi
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                                "Email verifikasi telah dikirim ke " + user.getEmail() +
+                                        "\nSilakan verifikasi email untuk login.",
+                                Snackbar.LENGTH_LONG);
+
+                        // Ambil view dari snackbar untuk diatur tampilannya
+                        View snackbarView = snackbar.getView();
+                        TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+
+                        // Atur agar bisa menampilkan multi-line dan teks rata kiri
+                        textView.setMaxLines(3);
+                        textView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+
+                        // Tampilkan snackbar
+                        snackbar.show();
                     } else {
+                        // Tampilkan toast jika gagal mengirim email verifikasi
                         Toast.makeText(verifikasiotp_page.this,
                                 "Gagal mengirim email verifikasi.",
                                 Toast.LENGTH_LONG).show();
@@ -113,11 +131,17 @@ public class verifikasiotp_page extends AppCompatActivity {
         });
 
         // ➡ Lanjut ke login
-        imageView17.setOnClickListener(v -> animateButton(imageView17, () -> {
+        imageView17.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut(); // <- Ini WAJIB ditambahkan
+
             Intent intent = new Intent(verifikasiotp_page.this, loginpage.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // optional: biar bersih
             startActivity(intent);
             finish();
-        }));
+        });
+
+
+
     }
 
     // Cek status verifikasi saat kembali ke activity
