@@ -1,19 +1,22 @@
 package com.deeyatt.freshmarket;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,14 +25,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 public class HomeFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    ImageView imageView20;
+    private ImageView imageView20;
+
+    // Overlay Welcome
+    private View welcomeOverlay;
+    private Button btnGoToEditProfile;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -38,7 +48,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate layout fragment_home.xml
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -46,6 +55,22 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // --- Overlay Welcome ---
+        welcomeOverlay = view.findViewById(R.id.welcomeOverlay);
+        btnGoToEditProfile = view.findViewById(R.id.btnGoToEditProfile);
+
+        checkFirstLoginAndShowOverlay();
+
+        btnGoToEditProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+            startActivity(intent);
+            hideWelcomeOverlay();
+        });
+
+        // Klik di luar card tidak menutup overlay
+        welcomeOverlay.setOnClickListener(null);
+
+        // --- Scroll voucher center ---
         HorizontalScrollView scrollView = view.findViewById(R.id.horizontalScrollView);
         LinearLayout linearLayout = view.findViewById(R.id.linearLayoutVouchers);
 
@@ -72,118 +97,18 @@ public class HomeFragment extends Fragment {
             scrollView.scrollTo(scrollTo, 0);
         });
 
+        // --- Menu Buttons ---
+        view.findViewById(R.id.imageView24).setOnClickListener(v -> openMenuWithAnim(v, menu_sayuran.class));
+        view.findViewById(R.id.imageView25).setOnClickListener(v -> openMenuWithAnim(v, menu_buah.class));
+        view.findViewById(R.id.imageView26).setOnClickListener(v -> openMenuWithAnim(v, menu_daging.class));
+        view.findViewById(R.id.imageView27).setOnClickListener(v -> openMenuWithAnim(v, menu_sembako.class));
+        view.findViewById(R.id.imageView28).setOnClickListener(v -> openMenuWithAnim(v, menu_frozenfood.class));
 
-        ImageView imageViewSayuran = view.findViewById(R.id.imageView24);
-
-        imageViewSayuran.setOnClickListener(v -> {
-            playScaleAnimation(v);
-
-            v.postDelayed(() -> {
-                Intent intent = new Intent(requireContext(), menu_sayuran.class);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
-        });
-
-
-        ImageView imageViewBuah = view.findViewById(R.id.imageView25);
-
-        imageViewBuah.setOnClickListener(v -> {
-            playScaleAnimation(v);
-
-            v.postDelayed(() -> {
-                Intent intent = new Intent(requireContext(), menu_buah.class);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
-        });
-
-        ImageView imageViewDaging = view.findViewById(R.id.imageView26);
-
-        imageViewDaging.setOnClickListener(v -> {
-            playScaleAnimation(v);
-
-            v.postDelayed(() -> {
-                Intent intent = new Intent(requireContext(), menu_daging.class);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
-        });
-
-
-        ImageView imageViewSembako = view.findViewById(R.id.imageView27);
-
-        imageViewSembako.setOnClickListener(v -> {
-            playScaleAnimation(v);
-
-            v.postDelayed(() -> {
-                Intent intent = new Intent(requireContext(), menu_sembako.class);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
-        });
-
-
-
-        ImageView imageViewFrozenfood = view.findViewById(R.id.imageView28);
-
-        imageViewFrozenfood.setOnClickListener(v -> {
-            playScaleAnimation(v);
-
-            v.postDelayed(() -> {
-                Intent intent = new Intent(requireContext(), menu_frozenfood.class);
-                startActivity(intent);
-                requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
-        });
-
-
+        // --- Lokasi Google Maps ---
         imageView20 = view.findViewById(R.id.imageView20);
+        imageView20.setOnClickListener(v -> animateAndOpenMaps());
 
-        imageView20.setOnClickListener(v -> {
-            ScaleAnimation scaleUp = new ScaleAnimation(
-                    1.0f, 1.1f,
-                    1.0f, 1.1f,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF, 0.5f);
-            scaleUp.setDuration(150);
-
-            ScaleAnimation scaleDown = new ScaleAnimation(
-                    1.1f, 1.0f,
-                    1.1f, 1.0f,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF, 0.5f);
-            scaleDown.setDuration(150);
-
-            scaleUp.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) { }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    imageView20.startAnimation(scaleDown);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) { }
-            });
-
-            scaleDown.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) { }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    checkLocationPermissionAndOpenMaps();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) { }
-            });
-
-            imageView20.startAnimation(scaleUp);
-        });
-
+        // --- Logo Text Color ---
         TextView textView9 = view.findViewById(R.id.textView9);
         String freshText = "Fresh";
         String marketText = "Market";
@@ -206,6 +131,110 @@ public class HomeFragment extends Fragment {
         textView9.setText(spannable);
     }
 
+    private void checkFirstLoginAndShowOverlay() {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("FreshMarketPrefs", Context.MODE_PRIVATE);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        boolean showOverlay = false;
+
+        if (user != null) {
+            // --- Reset flag jika user berbeda (login baru) ---
+            String lastUid = prefs.getString("lastUid", null);
+            if (lastUid == null || !lastUid.equals(user.getUid())) {
+                prefs.edit()
+                        .putString("lastUid", user.getUid())
+                        .putBoolean("isGoogleFirstLogin", true)
+                        .putBoolean("isManualFirstLogin", true)
+                        .apply();
+            }
+
+            boolean isGoogle = false;
+            for (UserInfo profile : user.getProviderData()) {
+                if ("google.com".equals(profile.getProviderId())) {
+                    isGoogle = true;
+                    break;
+                }
+            }
+            if (isGoogle && prefs.getBoolean("isGoogleFirstLogin", true)) {
+                showOverlay = true;
+                prefs.edit().putBoolean("isGoogleFirstLogin", false).apply();
+            } else if (!isGoogle && prefs.getBoolean("isManualFirstLogin", true)) {
+                showOverlay = true;
+                prefs.edit().putBoolean("isManualFirstLogin", false).apply();
+            }
+        }
+
+        if (showOverlay) {
+            showWelcomeOverlay();
+        }
+    }
+
+    private void showWelcomeOverlay() {
+        welcomeOverlay.setVisibility(View.VISIBLE);
+        welcomeOverlay.bringToFront();
+        welcomeOverlay.setAlpha(0f);
+        welcomeOverlay.animate().alpha(1f).setDuration(500).start();
+
+        // Sembunyikan Bottom Navigation
+        if (getActivity() != null) {
+            View bottomNav = getActivity().findViewById(R.id.bottomNavigationView);
+            if (bottomNav != null) bottomNav.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideWelcomeOverlay() {
+        welcomeOverlay.setVisibility(View.GONE);
+
+        // Tampilkan kembali Bottom Navigation
+        if (getActivity() != null) {
+            View bottomNav = getActivity().findViewById(R.id.bottomNavigationView);
+            if (bottomNav != null) bottomNav.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void openMenuWithAnim(View v, Class<?> targetActivity) {
+        playScaleAnimation(v);
+        v.postDelayed(() -> {
+            Intent intent = new Intent(requireContext(), targetActivity);
+            startActivity(intent);
+            requireActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }, 150);
+    }
+
+    private void animateAndOpenMaps() {
+        ScaleAnimation scaleUp = new ScaleAnimation(
+                1.0f, 1.1f,
+                1.0f, 1.1f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleUp.setDuration(150);
+
+        ScaleAnimation scaleDown = new ScaleAnimation(
+                1.1f, 1.0f,
+                1.1f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleDown.setDuration(150);
+
+        scaleUp.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation) {
+                imageView20.startAnimation(scaleDown);
+            }
+            @Override public void onAnimationRepeat(Animation animation) {}
+        });
+
+        scaleDown.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation) {
+                checkLocationPermissionAndOpenMaps();
+            }
+            @Override public void onAnimationRepeat(Animation animation) {}
+        });
+
+        imageView20.startAnimation(scaleUp);
+    }
+
     private void checkLocationPermissionAndOpenMaps() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -221,7 +250,6 @@ public class HomeFragment extends Fragment {
     private void openGoogleMaps() {
         double latitude = -6.2551726;
         double longitude = 107.2690336;
-
         String uri = "https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivity(intent);
@@ -239,6 +267,7 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
     private void playScaleAnimation(View view) {
         ScaleAnimation scale = new ScaleAnimation(
                 1f, 0.9f, 1f, 0.9f,
@@ -250,5 +279,4 @@ public class HomeFragment extends Fragment {
         scale.setRepeatMode(ScaleAnimation.REVERSE);
         view.startAnimation(scale);
     }
-
 }

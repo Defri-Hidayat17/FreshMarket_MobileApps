@@ -9,6 +9,64 @@
     android:background="@drawable/bg_home_page_revisi">
 
 
+    <!-- Overlay Sambutan -->
+    <FrameLayout
+        android:id="@+id/welcomeOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="500dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:background="@drawable/bg_card_welcome"
+            android:elevation="600dp"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/tvWelcomeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hai, Selamat Datang!"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/lexenddecasemibold"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvWelcomeDesc"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:text="Lengkapi biodata kamu dulu yuk biar belanja makin mudah."
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:paddingBottom="16dp" />
+
+            <Button
+                android:id="@+id/btnGoToEditProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Isi Biodata Sekarang"
+                android:backgroundTint="#1C8D70"
+                android:textColor="@android:color/white"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+
+
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
@@ -349,6 +407,8 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+
 
 
 
