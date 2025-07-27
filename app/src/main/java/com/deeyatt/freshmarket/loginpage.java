@@ -49,13 +49,24 @@ public class loginpage extends AppCompatActivity {
         EditText inputPassword = findViewById(R.id.inputPassword);
         kotakCeklis = findViewById(R.id.imageView5);
         loginBtn = findViewById(R.id.imageView10);
-        ImageView imageView12 = findViewById(R.id.imageView12);
-        TextView textView6 = findViewById(R.id.textView6);
-        TextView textView8 = findViewById(R.id.textView8);
+        ImageView googleBtn = findViewById(R.id.imageView12);
+        TextView textLupaPassword = findViewById(R.id.textView6);
+        TextView textDaftarAkun = findViewById(R.id.textView8);
 
         auth = FirebaseAuth.getInstance();
         sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+        // ====== CEK LOGIN OTOMATIS (ingat saya) ======
+        FirebaseUser currentUser = auth.getCurrentUser();
+        boolean isRememberMe = sharedPreferences.getBoolean("rememberMe", false);
+        boolean isRememberMeGoogle = sharedPreferences.getBoolean("rememberMeGoogle", false);
+
+        if (currentUser != null && currentUser.isEmailVerified() && (isRememberMe || isRememberMeGoogle)) {
+            startActivity(new Intent(this, homepage.class));
+            finish();
+            return;
+        }
 
         oneTapClient = Identity.getSignInClient(this);
         signInRequest = BeginSignInRequest.builder()
@@ -68,11 +79,13 @@ public class loginpage extends AppCompatActivity {
                 .setAutoSelectEnabled(false)
                 .build();
 
+        // Tombol ceklis remember me
         kotakCeklis.setOnClickListener(v -> {
             rememberMeChecked = !rememberMeChecked;
             kotakCeklis.setImageResource(rememberMeChecked ? R.drawable.kotak_ceklis_on : R.drawable.kotak_ceklis);
         });
 
+        // Tombol login email & password
         loginBtn.setOnClickListener(v -> {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
@@ -89,9 +102,11 @@ public class loginpage extends AppCompatActivity {
                             if (user != null) {
                                 if (user.isEmailVerified()) {
                                     Toast.makeText(this, "Berhasil Masuk", Toast.LENGTH_SHORT).show();
+                                    // ====== SIMPAN FLAG REMEMBER ME ======
                                     editor.putBoolean("rememberMe", rememberMeChecked);
                                     editor.putBoolean("rememberMeGoogle", false);
                                     editor.apply();
+
                                     startActivity(new Intent(this, homepage.class));
                                     finish();
                                 } else {
@@ -112,7 +127,8 @@ public class loginpage extends AppCompatActivity {
                     });
         });
 
-        imageView12.setOnClickListener(v -> {
+        // Tombol login Google
+        googleBtn.setOnClickListener(v -> {
             oneTapClient.beginSignIn(signInRequest)
                     .addOnSuccessListener(this, result -> {
                         try {
@@ -127,9 +143,10 @@ public class loginpage extends AppCompatActivity {
                     });
         });
 
-        textView6.setOnClickListener(v -> startActivity(new Intent(this, resetpassword.class)));
-        textView8.setOnClickListener(v -> startActivity(new Intent(this, daftarakunpage.class)));
+        textLupaPassword.setOnClickListener(v -> startActivity(new Intent(this, resetpassword.class)));
+        textDaftarAkun.setOnClickListener(v -> startActivity(new Intent(this, daftarakunpage.class)));
 
+        // Password show/hide
         final boolean[] isPasswordVisible = {false};
         inputPassword.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, R.drawable.eye_off, 0);
         inputPassword.setOnTouchListener((v, event) -> {
@@ -157,29 +174,11 @@ public class loginpage extends AppCompatActivity {
             return insets;
         });
 
-        // 🚀 Tambah animasi ke tombol & elemen penting
         addScaleEffect(loginBtn);
-        addScaleEffect(imageView12);
+        addScaleEffect(googleBtn);
         addScaleEffect(kotakCeklis);
-        addScaleEffect(textView6);
-        addScaleEffect(textView8);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        boolean isRememberMe = sharedPreferences.getBoolean("rememberMe", false);
-        boolean isRememberMeGoogle = sharedPreferences.getBoolean("rememberMeGoogle", false);
-
-        if (currentUser != null && currentUser.isEmailVerified()) {
-            if (isRememberMe || isRememberMeGoogle) {
-                startActivity(new Intent(this, homepage.class));
-                finish();
-            } else {
-                FirebaseAuth.getInstance().signOut();
-            }
-        }
+        addScaleEffect(textLupaPassword);
+        addScaleEffect(textDaftarAkun);
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
@@ -190,9 +189,11 @@ public class loginpage extends AppCompatActivity {
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
                             Toast.makeText(this, "Login Google berhasil!", Toast.LENGTH_SHORT).show();
+                            // ====== SIMPAN REMEMBERME GOOGLE ======
                             editor.putBoolean("rememberMeGoogle", true);
                             editor.putBoolean("rememberMe", false);
                             editor.apply();
+
                             startActivity(new Intent(this, homepage.class));
                             finish();
                         }
@@ -220,7 +221,6 @@ public class loginpage extends AppCompatActivity {
         }
     }
 
-    // 🌟 Method untuk efek animasi scale
     private void addScaleEffect(View view) {
         view.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {

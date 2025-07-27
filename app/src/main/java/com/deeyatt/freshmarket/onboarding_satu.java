@@ -9,6 +9,9 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class onboarding_satu extends AppCompatActivity {
@@ -25,10 +28,16 @@ public class onboarding_satu extends AppCompatActivity {
 
 // Lalu listener:
         buttonMulai.setOnClickListener(v -> {
+            // Simpan flag bahwa onboarding sudah dilihat
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            prefs.edit().putBoolean("firstOpen", false).apply();
+
+            // Pindah ke loginpage
             Intent intent = new Intent(onboarding_satu.this, loginpage.class);
             startActivity(intent);
             finish();
         });
+
 
 
         // Elemen halaman 1

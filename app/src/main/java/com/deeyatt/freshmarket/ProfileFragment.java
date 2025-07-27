@@ -24,8 +24,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +36,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
 
@@ -43,8 +50,12 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView imageProfile;
     private ImageView btnEdit;
+    private TextView textView11;
 
-    public ProfileFragment() {}
+    private ApiService apiService;
+
+    public ProfileFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +69,14 @@ public class ProfileFragment extends Fragment {
 
         imageProfile = view.findViewById(R.id.imageProfile);
         btnEdit = view.findViewById(R.id.btnEdit);
+        textView11 = view.findViewById(R.id.textView11);
+
+        // Retrofit init
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.34/freshmarket/") // ganti dengan IP server kamu
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(ApiService.class);
 
         View.OnClickListener clickListener = v -> {
             playScaleAnimation(v);
@@ -71,11 +90,58 @@ public class ProfileFragment extends Fragment {
         setupMenuItems(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Ambil email user login aktif
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String email = currentUser.getEmail();
+
+            // Reset agar data lama tidak nyangkut
+            textView11.setText("");
+            imageProfile.setImageResource(R.drawable.baseline_person_24);
+
+            loadProfileFromServer(email);
+        } else {
+            Toast.makeText(getContext(), "Email pengguna tidak ditemukan", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadProfileFromServer(String email) {
+        apiService.getProfile(email).enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                if (response.isSuccessful() && response.body() != null
+                        && "success".equals(response.body().status)) {
+
+                    UserModel.Data user = response.body().data;
+                    textView11.setText(user.name);
+
+                    if (user.photo != null && !user.photo.isEmpty()) {
+                        Glide.with(requireContext())
+                                .load(user.photo)
+                                .placeholder(R.drawable.baseline_person_24) // default jika kosong
+                                .into(imageProfile);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Gagal memuat profil", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void initMenu(View view) {
-        int[] menuIds = { R.id.itemEditProfil, R.id.itemVoucher, R.id.itemPesanan,
-                R.id.itemPengaturanAkun, R.id.itemNotifikasi, R.id.itemHubungi, R.id.itemTentang };
-        Class<?>[] menuClasses = { EditProfileActivity.class, VoucherPage.class, PesananPage.class,
-                PengaturanAkunActivity.class, PengaturanNotifikasi.class, HubungiKami.class, TentangKami.class };
+        int[] menuIds = {R.id.itemEditProfil, R.id.itemVoucher, R.id.itemPesanan,
+                R.id.itemPengaturanAkun, R.id.itemNotifikasi, R.id.itemHubungi, R.id.itemTentang};
+        Class<?>[] menuClasses = {EditProfileActivity.class, VoucherPage.class, PesananPage.class,
+                PengaturanAkunActivity.class, PengaturanNotifikasi.class, HubungiKami.class, TentangKami.class};
 
         for (int i = 0; i < menuIds.length; i++) {
             View item = view.findViewById(menuIds[i]);

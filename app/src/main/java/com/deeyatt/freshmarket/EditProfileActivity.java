@@ -2,6 +2,7 @@ package com.deeyatt.freshmarket;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,30 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -54,23 +50,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editName, editEmail, editBio;
     private Uri selectedImageUri = null;
 
-    // Firebase
-    private FirebaseFirestore firestore;
-    private StorageReference storageRef;
-    private FirebaseUser currentUser;
+    private ApiService apiService;
+    private String emailLogin;
+    private ProgressDialog progressDialog; // Tambahan Loading
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // === Init Views ===
         imageProfile = findViewById(R.id.imageProfile);
         btnEditPhoto = findViewById(R.id.btnEditPhoto);
         textBirthday = findViewById(R.id.textBirthday);
@@ -82,25 +70,26 @@ public class EditProfileActivity extends AppCompatActivity {
         ImageView btnGender = findViewById(R.id.btngender);
         ImageView btnBack = findViewById(R.id.btnBack);
 
-        findViewById(R.id.btnUpdate).setOnClickListener(v -> updateProfileToFirebase());
+        progressDialog = new ProgressDialog(this); // Inisialisasi ProgressDialog
+        progressDialog.setMessage("Menyimpan data...");
+        progressDialog.setCancelable(false);
 
-        // === Firebase Init ===
-        firestore = FirebaseFirestore.getInstance();
-        storageRef = FirebaseStorage.getInstance().getReference();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Load data user dari Firestore
-        loadUserProfile();
+        findViewById(R.id.btnUpdate).setOnClickListener(v -> updateProfileToMySQL());
 
         btnBack.setOnClickListener(v -> {
             playScaleAnimation(v);
-            v.postDelayed(() -> {
-                finish();
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }, 150);
+            finish();
         });
 
-        // Gender
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.34/freshmarket/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(ApiService.class);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        emailLogin = (user != null) ? user.getEmail() : "";
+
         View.OnClickListener genderClickListener = v -> {
             playScaleAnimation(v);
             showGenderPicker();
@@ -108,7 +97,6 @@ public class EditProfileActivity extends AppCompatActivity {
         textGender.setOnClickListener(genderClickListener);
         btnGender.setOnClickListener(genderClickListener);
 
-        // Foto profile
         View.OnClickListener imageClick = v -> {
             playScaleAnimation(v);
             requestPermissions();
@@ -116,84 +104,78 @@ public class EditProfileActivity extends AppCompatActivity {
         imageProfile.setOnClickListener(imageClick);
         btnEditPhoto.setOnClickListener(imageClick);
 
-        // Kalender
         View.OnClickListener calendarClick = v -> {
             playScaleAnimation(v);
             showDatePicker();
         };
         textBirthday.setOnClickListener(calendarClick);
         iconCalendar.setOnClickListener(calendarClick);
+
+        if (!emailLogin.isEmpty()) {
+            loadProfileFromMySQL(emailLogin);
+        }
     }
 
-    private void loadUserProfile() {
-        if (currentUser == null) return;
-        DocumentReference docRef = firestore.collection("users").document(currentUser.getUid());
-        docRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                editName.setText(documentSnapshot.getString("name"));
-                editEmail.setText(documentSnapshot.getString("email"));
-                editBio.setText(documentSnapshot.getString("bio"));
-                textBirthday.setText(documentSnapshot.getString("birthday"));
-                textGender.setText(documentSnapshot.getString("gender"));
+    private void loadProfileFromMySQL(String email) {
+        apiService.getProfile(email).enqueue(new Callback<UserModel>() {
+            @Override
+            public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                if (response.isSuccessful() && response.body() != null && "success".equals(response.body().status)) {
+                    UserModel.Data user = response.body().data;
+                    editName.setText(user.name);
+                    editEmail.setText(user.email);
+                    editBio.setText(user.bio);
+                    textBirthday.setText(user.birthday);
+                    textGender.setText(user.gender);
 
-                String photoUrl = documentSnapshot.getString("photoUrl");
-                if (photoUrl != null && !photoUrl.isEmpty()) {
-                    Glide.with(this).load(photoUrl).into(imageProfile);
+                    if (user.photo != null && !user.photo.isEmpty()) {
+                        Glide.with(EditProfileActivity.this).load(user.photo).into(imageProfile);
+                    } else {
+                        imageProfile.setImageResource(R.drawable.baseline_person_24);
+                    }
                 } else {
-                    // default jika tidak ada foto
-                    imageProfile.setImageResource(R.drawable.baseline_person_24);
+                    Toast.makeText(EditProfileActivity.this, "Gagal memuat data", Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onFailure(Call<UserModel> call, Throwable t) {
+                Toast.makeText(EditProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void updateProfileToFirebase() {
-        if (currentUser == null) return;
-
+    private void updateProfileToMySQL() {
         String name = editName.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String bio = editBio.getText().toString().trim();
         String birthday = textBirthday.getText().toString().trim();
         String gender = textGender.getText().toString().trim();
+        String photo = (selectedImageUri != null) ? selectedImageUri.toString() : "";
 
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("name", name);
-        userMap.put("email", email);
-        userMap.put("bio", bio);
-        userMap.put("birthday", birthday);
-        userMap.put("gender", gender);
+        progressDialog.show(); // Tampilkan Loading
 
-        // Jika ada foto baru yang dipilih
-        if (selectedImageUri != null) {
-            String uniqueFileName = "profileImages/" + currentUser.getUid() + "_" + UUID.randomUUID() + ".jpg";
-            StorageReference profileRef = storageRef.child(uniqueFileName);
-            profileRef.putFile(selectedImageUri)
-                    .addOnSuccessListener(taskSnapshot -> profileRef.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                userMap.put("photoUrl", uri.toString());
-                                saveUserMap(userMap);
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(this, "Gagal ambil URL foto", Toast.LENGTH_SHORT).show()))
-                    .addOnFailureListener(e -> Toast.makeText(this, "Upload gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        } else {
-            saveUserMap(userMap);
-        }
-    }
+        Call<ResponseBody> call = apiService.updateProfile(name, email, bio, birthday, gender, photo);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressDialog.dismiss(); // Hilangkan Loading
+                Toast.makeText(EditProfileActivity.this, "Profil berhasil disimpan!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
 
-    private void saveUserMap(Map<String, Object> userMap) {
-        firestore.collection("users").document(currentUser.getUid())
-                .set(userMap)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profil berhasil diperbarui", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Gagal memperbarui profil", Toast.LENGTH_SHORT).show());
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressDialog.dismiss(); // Hilangkan Loading
+                Toast.makeText(EditProfileActivity.this, "Gagal: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            }, REQUEST_PERMISSIONS);
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
         } else {
             showImagePickerDialog();
         }
@@ -267,21 +249,19 @@ public class EditProfileActivity extends AppCompatActivity {
                 this,
                 R.style.DatePickerTheme,
                 (DatePicker view, int selectedYear, int selectedMonth, int selectedDay) -> {
-                    String dateStr = String.format("%02d / %02d / %04d", selectedDay, selectedMonth + 1, selectedYear);
+                    String dateStr = String.format("%02d/%02d/%04d", selectedDay, selectedMonth + 1, selectedYear);
                     textBirthday.setText(dateStr);
                 },
                 year, month, day
         );
 
-        // Tambahkan tombol manual agar jelas
         datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Simpan", datePickerDialog);
         datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Batal", datePickerDialog);
 
-        // Ubah warna tombol ke #007F5F
         datePickerDialog.setOnShowListener(dialog -> {
-            int customColor = Color.parseColor("#007F5F");
-            datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(customColor);
-            datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(customColor);
+            int colorHijau = Color.parseColor("#007F5F");
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(colorHijau);
+            datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(colorHijau);
         });
 
         datePickerDialog.show();
@@ -292,23 +272,16 @@ public class EditProfileActivity extends AppCompatActivity {
         View sheet = getLayoutInflater().inflate(R.layout.dialog_gender_picker, null);
         dialog.setContentView(sheet);
 
-        View layoutMale = sheet.findViewById(R.id.btnMale);
-        View layoutFemale = sheet.findViewById(R.id.btnFemale);
-
-        layoutMale.setOnClickListener(v -> {
+        sheet.findViewById(R.id.btnMale).setOnClickListener(v -> {
             playScaleAnimation(v);
-            v.postDelayed(() -> {
-                textGender.setText("Laki-laki");
-                dialog.dismiss();
-            }, 150);
+            textGender.setText("Laki-laki");
+            dialog.dismiss();
         });
 
-        layoutFemale.setOnClickListener(v -> {
+        sheet.findViewById(R.id.btnFemale).setOnClickListener(v -> {
             playScaleAnimation(v);
-            v.postDelayed(() -> {
-                textGender.setText("Perempuan");
-                dialog.dismiss();
-            }, 150);
+            textGender.setText("Perempuan");
+            dialog.dismiss();
         });
 
         dialog.show();
