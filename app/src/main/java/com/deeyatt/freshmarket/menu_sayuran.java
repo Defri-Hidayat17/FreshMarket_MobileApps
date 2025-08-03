@@ -6,11 +6,16 @@ import android.view.View;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class menu_sayuran extends AppCompatActivity {
 
@@ -22,17 +27,19 @@ public class menu_sayuran extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_sayuran);
 
-        // Inset padding (biar gak ketabrak status bar)
+        // Atur padding biar tidak ketabrak status bar
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Tombol back & icon cart di header
         ImageView btnBack = findViewById(R.id.imageView1);
         ImageView btnCart = findViewById(R.id.imageView30);
         cartBadge = findViewById(R.id.cartBadge);
 
+        // Back ke homepage
         btnBack.setOnClickListener(v -> {
             playScaleAnimation(v);
             Intent intent = new Intent(menu_sayuran.this, homepage.class);
@@ -41,6 +48,7 @@ public class menu_sayuran extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
+        // Klik icon cart → ke FragmentCart
         btnCart.setOnClickListener(v -> {
             playScaleAnimation(v);
             Intent intent = new Intent(menu_sayuran.this, homepage.class);
@@ -49,8 +57,7 @@ public class menu_sayuran extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
-
-
+        // Setup semua tombol add keranjang
         setupCartButtons();
     }
 
@@ -60,14 +67,55 @@ public class menu_sayuran extends AppCompatActivity {
                 R.id.btnKeranjang4, R.id.btnKeranjang5, R.id.btnKeranjang6
         };
 
-        for (int id : btnIds) {
-            ImageView btn = findViewById(id);
+        for (int btnId : btnIds) {
+            ImageView btn = findViewById(btnId);
             btn.setOnClickListener(v -> {
                 playScaleAnimation(v);
-                cartCount++;
-                updateBadge();
+
+                String idProduk = "1"; // default trial
+                if (btnId == R.id.btnKeranjang2) idProduk = "2";
+                else if (btnId == R.id.btnKeranjang3) idProduk = "3";
+                else if (btnId == R.id.btnKeranjang4) idProduk = "4";
+                else if (btnId == R.id.btnKeranjang5) idProduk = "5";
+                else if (btnId == R.id.btnKeranjang6) idProduk = "6";
+
+                addToCart(idProduk);
             });
         }
+    }
+
+    /** Panggil API untuk add cart */
+    private void addToCart(String idProduk) {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<BaseResponse> call = apiService.addToCart(idProduk, 1);
+
+        call.enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().isStatus()) {
+                        cartCount++;
+                        updateBadge();
+                        Toast.makeText(menu_sayuran.this,
+                                response.body().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(menu_sayuran.this,
+                                "Gagal tambah: " + response.body().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(menu_sayuran.this,
+                            "Response tidak valid", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                Toast.makeText(menu_sayuran.this,
+                        "Gagal koneksi: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateBadge() {
@@ -81,7 +129,8 @@ public class menu_sayuran extends AppCompatActivity {
         ScaleAnimation scale = new ScaleAnimation(
                 1f, 0.9f, 1f, 0.9f,
                 ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
-                ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+                ScaleAnimation.RELATIVE_TO_SELF, 0.5f
+        );
         scale.setDuration(100);
         scale.setRepeatCount(1);
         scale.setRepeatMode(ScaleAnimation.REVERSE);

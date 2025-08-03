@@ -82,7 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.34/freshmarket/")
+                .baseUrl("http://192.168.1.36/freshmarket/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(ApiService.class);

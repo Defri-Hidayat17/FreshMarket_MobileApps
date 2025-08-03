@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment {
 
         // Retrofit init
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.34/freshmarket/") // ganti dengan IP server kamu
+                .baseUrl("http://192.168.1.36/freshmarket/") // ganti dengan IP server kamu
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(ApiService.class);

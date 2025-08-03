@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6F6">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:id="@+id/headerCheckout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <ImageView
+                android:id="@+id/btnBackCheckout"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_arrow_back_24"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:text="Checkout"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:fontFamily="@font/lexenddecabold"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <!-- ALAMAT -->
+        <LinearLayout
+            android:id="@+id/layoutAlamat"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_border">
+
+            <ImageView
+                android:src="@drawable/baseline_location_on_24"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:tint="#1C8D70" />
+
+            <EditText
+                android:id="@+id/editAlamat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:hint="Tulis alamat lengkap"
+                android:inputType="textPostalAddress"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#333" />
+        </LinearLayout>
+
+        <!-- PRODUK -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_border">
+
+            <ImageView
+                android:id="@+id/imageProductCheckout"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:id="@+id/textNamaProduk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Produk"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/lexenddecasemibold"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:id="@+id/textHargaProduk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rp 0"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/lexenddecaregular"
+                    android:textColor="#666" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textQtyProduk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="x1"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <!-- PESAN UNTUK PENJUAL -->
+        <EditText
+            android:id="@+id/editPesanPenjual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Tulis pesan untuk penjual (opsional)"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:gravity="top"
+            android:background="@drawable/bg_border"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/lexenddecaregular"
+            android:textColor="#333" />
+
+        <!-- VOUCHER -->
+        <LinearLayout
+            android:id="@+id/layoutVoucher"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_border"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Voucher"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecasemibold"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/textPilihVoucher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pilih voucher"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#1C8D70" />
+        </LinearLayout>
+
+        <!-- METODE PEMBAYARAN -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:background="@drawable/bg_border"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Metode Pembayaran"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecasemibold"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/textMetodePembayaran"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="COD"
+                android:textSize="14sp"
+                android:fontFamily="@font/lexenddecaregular"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <!-- TOTAL -->
+        <TextView
+            android:id="@+id/textTotalHarga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: Rp 0"
+            android:textSize="16sp"
+            android:fontFamily="@font/lexenddecasemibold"
+            android:textColor="#000"
+            android:layout_marginTop="24dp" />
+
+        <!-- BUTTON PESAN -->
+        <Button
+            android:id="@+id/btnPesanSekarang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pesan Sekarang"
+            android:backgroundTint="#1C8D70"
+            android:textColor="#FFF"
+            android:fontFamily="@font/lexenddecaregular"
+            android:layout_marginTop="24dp" />
+    </LinearLayout>
+</ScrollView>
