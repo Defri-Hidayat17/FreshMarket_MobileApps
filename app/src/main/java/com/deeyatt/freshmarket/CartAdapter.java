@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.ScaleAnimation;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +23,9 @@ import retrofit2.Response;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> {
 
     public interface OnCartActionListener {
-        void onCartChanged();
-        void onDeleteItem(String idProduk);
+        void onCartChanged();       // tidak digunakan lagi untuk total, tetap disediakan kalau perlu
+        void onDeleteItem(String idProduk); // panggil API hapus
+        void onSelectionChanged();  // update total jika qty atau checkbox berubah
     }
 
     public interface OnItemClickListener {
@@ -56,50 +58,58 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         CartItem item = cartList.get(position);
 
-        // Tampilkan data produk
+        // Atur text
         holder.textProductName.setText(item.getNama_produk());
         holder.textProductPrice.setText("Rp " + item.getHarga());
-        holder.textProductDesc.setText("Produk segar dan sehat");
+        holder.textProductDesc.setText(item.getDeskripsi());
         holder.textQuantity.setText(String.valueOf(item.getQty()));
 
-        // Load gambar
+        // Checkbox → update total
+        holder.checkBoxSelect.setOnCheckedChangeListener(null);
+        holder.checkBoxSelect.setChecked(item.isSelected());
+        holder.checkBoxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            item.setSelected(isChecked);
+            if (listener != null) listener.onSelectionChanged();
+        });
+
+        // Gambar
         String imageUrl = "http://192.168.1.36/freshmarket/images/" + item.getGambar();
         Glide.with(context).load(imageUrl).into(holder.imageProduct);
 
-        // Tombol tambah qty
+        // Button tambah qty
         holder.buttonIncrease.setOnClickListener(v -> {
             int qty = item.getQty() + 1;
-            updateQtyOnServer(item.getId(), qty);
             item.setQty(qty);
             holder.textQuantity.setText(String.valueOf(qty));
             applyScaleAnimation(holder.buttonIncrease);
-            if (listener != null) listener.onCartChanged();
+
+            updateQtyOnServer(item.getId(), qty);
+            if (listener != null) listener.onSelectionChanged();
         });
 
-        // Tombol kurang qty
+        // Button kurang qty
         holder.buttonDecrease.setOnClickListener(v -> {
             int qty = item.getQty();
             if (qty > 1) {
                 qty--;
-                updateQtyOnServer(item.getId(), qty);
                 item.setQty(qty);
                 holder.textQuantity.setText(String.valueOf(qty));
                 applyScaleAnimation(holder.buttonDecrease);
-                if (listener != null) listener.onCartChanged();
+
+                updateQtyOnServer(item.getId(), qty);
+                if (listener != null) listener.onSelectionChanged();
             }
         });
 
-        // Tombol hapus item
+        // Button hapus
         holder.buttonDelete.setOnClickListener(v -> {
             applyScaleAnimation(holder.buttonDelete);
-            String idCart = item.getId();
-            cartList.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, cartList.size());
-            if (listener != null) listener.onDeleteItem(idCart);
+            if (listener != null) {
+                listener.onDeleteItem(item.getId()); // hanya trigger hapus, list di-refresh di fragment
+            }
         });
 
-        // Klik item → trigger ke fragment/activity
+        // Klik item → ke detail/checkout
         holder.itemView.setOnClickListener(v -> {
             if (onItemClickListener != null) {
                 onItemClickListener.onItemClick(item);
@@ -115,6 +125,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageProduct, buttonDecrease, buttonIncrease, buttonDelete;
         TextView textProductName, textProductPrice, textProductDesc, textQuantity;
+        CheckBox checkBoxSelect;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -126,6 +137,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             buttonDecrease = itemView.findViewById(R.id.buttonDecrease);
             buttonIncrease = itemView.findViewById(R.id.buttonIncrease);
             buttonDelete = itemView.findViewById(R.id.buttonDelete);
+            checkBoxSelect = itemView.findViewById(R.id.checkBoxSelect);
         }
     }
 
@@ -147,12 +159,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         apiService.updateCartQty(idCart, qty).enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(@NonNull Call<BaseResponse> call, @NonNull Response<BaseResponse> response) {
-                // Tidak ada Toast untuk update qty
+                // UI sudah diupdate, tidak perlu aksi tambahan
             }
 
             @Override
             public void onFailure(@NonNull Call<BaseResponse> call, @NonNull Throwable t) {
-                // Tidak ada Toast untuk update qty
+                // Bisa tampilkan toast kalau mau
             }
         });
     }

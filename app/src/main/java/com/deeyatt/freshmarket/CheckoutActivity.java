@@ -8,19 +8,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class CheckoutActivity extends AppCompatActivity {
 
-    private ImageView btnBackCheckout, imageProductCheckout;
+    private ImageView btnBackCheckout;
     private EditText editAlamat, editPesanPenjual;
-    private TextView textNamaProduk, textHargaProduk, textQtyProduk, textTotalHarga, textPilihVoucher, textMetodePembayaran;
+    private TextView textTotalHarga, textPilihVoucher, textMetodePembayaran;
     private Button btnPesanSekarang;
+    private RecyclerView recyclerCheckout;
 
-    private String namaProduk, hargaProduk, gambarProduk;
-    private int qtyProduk, totalHarga;
+    private ArrayList<CartItem> selectedItems;
+    private CheckoutAdapter checkoutAdapter;
+    private int totalHarga = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,70 +34,49 @@ public class CheckoutActivity extends AppCompatActivity {
 
         // --- Init View ---
         btnBackCheckout = findViewById(R.id.btnBackCheckout);
-        imageProductCheckout = findViewById(R.id.imageProductCheckout);
         editAlamat = findViewById(R.id.editAlamat);
         editPesanPenjual = findViewById(R.id.editPesanPenjual);
-        textNamaProduk = findViewById(R.id.textNamaProduk);
-        textHargaProduk = findViewById(R.id.textHargaProduk);
-        textQtyProduk = findViewById(R.id.textQtyProduk);
         textTotalHarga = findViewById(R.id.textTotalHarga);
         textPilihVoucher = findViewById(R.id.textPilihVoucher);
         textMetodePembayaran = findViewById(R.id.textMetodePembayaran);
         btnPesanSekarang = findViewById(R.id.btnPesanSekarang);
+        recyclerCheckout = findViewById(R.id.recyclerCheckout);
 
         // --- Ambil data dari Intent ---
-        namaProduk = getIntent().getStringExtra("nama_produk");
-        hargaProduk = getIntent().getStringExtra("harga_produk");
-        gambarProduk = getIntent().getStringExtra("gambar_produk");
-        qtyProduk = getIntent().getIntExtra("qty_produk", 1);
-        totalHarga = getIntent().getIntExtra("total_harga", 0);
-
-        // --- Set data ke view ---
-        textNamaProduk.setText(namaProduk);
-        textHargaProduk.setText("Rp " + hargaProduk);
-        textQtyProduk.setText("x" + qtyProduk);
-        textTotalHarga.setText("Total: Rp " + totalHarga);
-
-        if (gambarProduk != null && !gambarProduk.isEmpty()) {
-            String imageUrl = "http://192.168.1.36/freshmarket/images/" + gambarProduk;
-            Glide.with(this).load(imageUrl).placeholder(android.R.drawable.ic_menu_gallery).into(imageProductCheckout);
-        } else {
-            imageProductCheckout.setImageResource(android.R.drawable.ic_menu_gallery);
+        selectedItems = getIntent().getParcelableArrayListExtra("selected_items");
+        if (selectedItems == null) {
+            selectedItems = new ArrayList<>();
         }
 
+        // --- Hitung total harga ---
+        for (CartItem item : selectedItems) {
+            int harga = parseHarga(item.getHarga());
+            totalHarga += harga * item.getQty();
+        }
+        textTotalHarga.setText("Total: Rp " + totalHarga);
+
+        // --- Setup RecyclerView untuk produk yang dipilih ---
+        recyclerCheckout.setLayoutManager(new LinearLayoutManager(this));
+        checkoutAdapter = new CheckoutAdapter(this, selectedItems);
+        recyclerCheckout.setAdapter(checkoutAdapter);
+
         // --- Button Back ---
-        ImageView btnBackCheckout = findViewById(R.id.btnBackCheckout);
-        btnBackCheckout.setOnClickListener(v -> {
-            finish(); // menutup CheckoutActivity dan kembali ke CartFragment
-        });
+        btnBackCheckout.setOnClickListener(v -> finish());
 
-
-        // --- Navigasi ke Pilih Voucher ---
+        // --- Navigasi ke Voucher Page ---
         textPilihVoucher.setOnClickListener(v -> {
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-            // Cek apakah fragment voucher sudah ada
-            if (!(currentFragment instanceof VoucherBelumTerpakaiFragment)) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new VoucherBelumTerpakaiFragment())
-                        .addToBackStack(null) // supaya bisa kembali dengan tombol back
-                        .commit();
-            }
+            Intent intent = new Intent(CheckoutActivity.this, VoucherPage.class);
+            intent.putExtra("OPEN_TAB", 0); // 0 = tab "Belum Terpakai"
+            startActivity(intent);
         });
-
-
 
         // --- Pesan Sekarang ---
         btnPesanSekarang.setOnClickListener(v -> {
-            // Ambil alamat yang diketik
             String alamat = editAlamat.getText().toString().trim();
             String pesan = editPesanPenjual.getText().toString().trim();
 
             Intent intent = new Intent(this, PesananBerhasilActivity.class);
-            intent.putExtra("nama_produk", namaProduk);
-            intent.putExtra("harga_produk", hargaProduk);
-            intent.putExtra("qty_produk", qtyProduk);
+            intent.putExtra("selected_items", selectedItems);
             intent.putExtra("total_harga", totalHarga);
             intent.putExtra("alamat", alamat);
             intent.putExtra("pesan_penjual", pesan);
@@ -103,5 +87,21 @@ public class CheckoutActivity extends AppCompatActivity {
 
         // Metode Pembayaran fixed COD
         textMetodePembayaran.setText("COD");
+    }
+
+    /**
+     * Ambil angka harga sebelum '/' (contoh "5000/3pcs" -> 5000)
+     */
+    private int parseHarga(String hargaStr) {
+        if (hargaStr == null || hargaStr.isEmpty()) return 0;
+        try {
+            int slashIndex = hargaStr.indexOf('/');
+            String hargaAngka = (slashIndex != -1) ? hargaStr.substring(0, slashIndex).trim() : hargaStr.trim();
+            hargaAngka = hargaAngka.replaceAll("[^0-9]", "");
+            return Integer.parseInt(hargaAngka);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

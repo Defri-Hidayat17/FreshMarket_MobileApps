@@ -12,11 +12,23 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
+        <!-- CheckBox untuk memilih item -->
+        <CheckBox
+            android:id="@+id/checkBoxSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
+
         <!-- Gambar Produk dengan radius -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardImageProduct"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_toEndOf="@id/checkBoxSelect"
+            android:layout_marginStart="8dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:cardUseCompatPadding="true">
@@ -66,7 +78,7 @@
             android:layout_marginTop="4dp"
             android:text="Produk segar dan sehat"
             android:textColor="#666666"
-            android:textSize="14sp"
+            android:textSize="10sp"
             android:fontFamily="@font/lexenddecaregular" />
 
         <!-- Tombol Hapus -->

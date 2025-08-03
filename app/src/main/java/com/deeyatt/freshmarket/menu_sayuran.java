@@ -34,7 +34,6 @@ public class menu_sayuran extends AppCompatActivity {
             return insets;
         });
 
-        // Tombol back & icon cart di header
         ImageView btnBack = findViewById(R.id.imageView1);
         ImageView btnCart = findViewById(R.id.imageView30);
         cartBadge = findViewById(R.id.cartBadge);
@@ -57,8 +56,11 @@ public class menu_sayuran extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
 
-        // Setup semua tombol add keranjang
+        // Tombol add keranjang per produk
         setupCartButtons();
+
+        // Ambil jumlah cart dari server saat pertama kali load
+        getCartCountFromServer();
     }
 
     private void setupCartButtons() {
@@ -72,7 +74,7 @@ public class menu_sayuran extends AppCompatActivity {
             btn.setOnClickListener(v -> {
                 playScaleAnimation(v);
 
-                String idProduk = "1"; // default trial
+                String idProduk = "1";
                 if (btnId == R.id.btnKeranjang2) idProduk = "2";
                 else if (btnId == R.id.btnKeranjang3) idProduk = "3";
                 else if (btnId == R.id.btnKeranjang4) idProduk = "4";
@@ -84,7 +86,9 @@ public class menu_sayuran extends AppCompatActivity {
         }
     }
 
-    /** Panggil API untuk add cart */
+    /**
+     * Tambahkan produk ke cart di server
+     */
     private void addToCart(String idProduk) {
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<BaseResponse> call = apiService.addToCart(idProduk, 1);
@@ -94,8 +98,8 @@ public class menu_sayuran extends AppCompatActivity {
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().isStatus()) {
-                        cartCount++;
-                        updateBadge();
+                        // Ambil ulang jumlah cart dari server supaya akurat
+                        getCartCountFromServer();
                         Toast.makeText(menu_sayuran.this,
                                 response.body().getMessage(),
                                 Toast.LENGTH_SHORT).show();
@@ -118,10 +122,41 @@ public class menu_sayuran extends AppCompatActivity {
         });
     }
 
+    /**
+     * Ambil jumlah item dalam cart dari server
+     */
+    private void getCartCountFromServer() {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<ResponseCartList> call = apiService.getCart();
+
+        call.enqueue(new Callback<ResponseCartList>() {
+            @Override
+            public void onResponse(Call<ResponseCartList> call, Response<ResponseCartList> response) {
+                if (response.isSuccessful() && response.body() != null &&
+                        response.body().isStatus() && response.body().getData() != null) {
+                    cartCount = response.body().getData().size();
+                } else {
+                    cartCount = 0;
+                }
+                updateBadge();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCartList> call, Throwable t) {
+                cartCount = 0;
+                updateBadge();
+            }
+        });
+    }
+
     private void updateBadge() {
         if (cartBadge != null) {
-            cartBadge.setText(String.valueOf(cartCount));
-            cartBadge.setVisibility(View.VISIBLE);
+            if (cartCount > 0) {
+                cartBadge.setText(String.valueOf(cartCount));
+                cartBadge.setVisibility(View.VISIBLE);
+            } else {
+                cartBadge.setVisibility(View.GONE);
+            }
         }
     }
 
